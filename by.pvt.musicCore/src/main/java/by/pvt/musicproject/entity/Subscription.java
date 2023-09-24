@@ -14,14 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(schema = "music", name = "subscription")
 public class Subscription {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private LocalDateTime StartData;
-    private LocalDateTime EndData;
-    private Long user_id;
-    private Long playlist_id;
-    private BigDecimal subsPrice;
 
 
 }

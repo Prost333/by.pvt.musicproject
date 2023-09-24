@@ -13,12 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Table(schema = "music", name = "albums")
 public class Albums {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String style;
-    private LocalDate Relese;
+
 
 
 }

@@ -14,10 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Table(schema = "music", name = "MyPlayList")
 public class MyPlayList {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
-    private  Long userId;
-//    private List<Long> trackId;
+
 
 }
