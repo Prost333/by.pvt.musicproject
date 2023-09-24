@@ -13,31 +13,7 @@ import by.pvt.musicproject.service.imp.UserServiceImp;
 
 public class Main {
     public static void main(String[] args) {
-//        RecordPlayer recordPlayer =new RecordPlayer();
-//        String file = "The-Doors-Spanish-Caravan.wav";
-//        recordPlayer.Play(file);
-        UserService userService = new UserServiceImp(new UserRepository());
-        ProducerService producerService = new ProducerServiceImp(new ProducerRepository());
-        User user = new User();
-        user.setName("dima");
-        user.setLogin("dima");
-        user.setSurname("bol");
-        user.setMyPlayListId(new MyPlayList());
-        user.setRole("us");
-        user.setPassword("1");
-        userService.add(user);
-        Producer producer = new Producer();
-        producer.setCompany("Record");
-        producer.setSalary(10L);
-        producer.setName("ad");
-        producer.setLogin("ad");
-        producer.setRole("ad");
-        producer.setSurname("lo");
-        producer.setPassword("2");
-        producerService.add(producer);
 
-        System.out.println(userService.getAllUser());
-        System.out.println(producerService.getAllProducer());
     }
 
 

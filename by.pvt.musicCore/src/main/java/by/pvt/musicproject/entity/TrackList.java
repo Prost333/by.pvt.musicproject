@@ -12,15 +12,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(schema = "music", name = "track_list")
 public class TrackList {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String track_name;
-    private String style;
-    private String lenght;
-    private Long id_albom;
-    private Long id_performers;
-    private  String file;
 
 
 }

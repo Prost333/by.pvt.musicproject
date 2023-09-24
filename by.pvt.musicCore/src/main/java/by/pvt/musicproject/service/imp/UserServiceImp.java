@@ -9,23 +9,5 @@ import java.util.List;
 
 public class UserServiceImp implements UserService {
 
-    private  final DaoUser dao;
-    private UserMapping userMapping;
 
-    public UserServiceImp(DaoUser dao) {
-        this.dao = dao;
-    }
-
-    public void add(User user){
-        dao.add(user);
-    }
-    public User findUserById(Long id){
-        return dao.findUserById(id);
-    }
-    public void deleteUser(Long id){
-        dao.deleteUser(id);
-    }
-    public List<User> getAllUser(){
-        return  dao.getAllUser();
-    }
 }

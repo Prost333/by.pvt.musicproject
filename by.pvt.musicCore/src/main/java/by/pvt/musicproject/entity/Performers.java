@@ -12,11 +12,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(schema = "music", name = "performers")
 public class Performers {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String closenes;
 
 
 }
