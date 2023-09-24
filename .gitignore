@@ -1,0 +1,4 @@
+# Project exclude paths
+/by.pvt.musicApi/target/
+/by.pvt.musicCore/target/
+/.idea/
