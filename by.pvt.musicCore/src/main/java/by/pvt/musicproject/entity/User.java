@@ -25,9 +25,12 @@ public class User {
     private String login;
     @Column(name = "password")
     private String password;
-    @Embedded
-    @Column(name = "playlist")
+    @OneToOne
+    @JoinColumn(name = "playlist_id")
     private MyPlayList myPlayListId;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private Subscription subscription;
     @Column(name = "role")
     private String role;
 }

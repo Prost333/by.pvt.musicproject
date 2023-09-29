@@ -5,16 +5,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
+
 public class UserResponse {
     private Long id;
     private String name;
     private String surname;
     private String login;
     private String password;
-
     private String role;
+    private Long playlist;
+
 }

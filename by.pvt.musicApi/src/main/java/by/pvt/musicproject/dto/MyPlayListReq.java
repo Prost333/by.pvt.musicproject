@@ -6,7 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import java.util.List;
 @Data
 @AllArgsConstructor
@@ -15,6 +18,7 @@ import java.util.List;
 public class MyPlayListReq {
     private  Long id;
     private  Long userId;
-    private List<Long> trackId;
+
+
 
 }

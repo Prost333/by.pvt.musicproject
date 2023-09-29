@@ -11,8 +11,8 @@ public class TrackListMapping {
         trackListRes.setStyle(trackList.getStyle());
         trackListRes.setLenght(trackList.getLenght());
         trackListRes.setFile(trackList.getFile());
-        trackListRes.setId_albom(trackList.getId_albom());
-        trackListRes.setId_performers(trackList.getId_performers());
+//        trackListRes.setId_albom(trackList.getId_albom());
+//        trackListRes.setId_performers(trackList.getId_performers());
         trackListRes.setId(trackList.getId());
         return trackListRes;
     }
@@ -23,8 +23,8 @@ public class TrackListMapping {
         trackList.setTrack_name(trackListReq.getTrack_name());
         trackList.setId(trackListReq.getId());
         trackList.setLenght(trackListReq.getLenght());
-        trackList.setId_albom(trackListReq.getId_albom());
-        trackList.setId_performers(trackListReq.getId_performers());
+//        trackList.setId_albom(trackListReq.getId_albom());
+//        trackList.setId_performers(trackListReq.getId_performers());
         trackList.setStyle(trackListReq.getStyle());
         return  trackList;
     }
