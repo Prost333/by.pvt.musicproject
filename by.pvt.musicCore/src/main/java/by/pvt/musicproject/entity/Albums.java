@@ -1,11 +1,10 @@
 package by.pvt.musicproject.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,6 +18,16 @@ public class Albums {
     private String name;
     private String style;
     private LocalDate Relese;
+    @ManyToOne
+    @JoinColumn(name = "performers_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Performers performers;
+    @OneToMany
+    @JoinColumn(name= "track_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<TrackList> trackList;
 
 
 }

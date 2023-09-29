@@ -17,11 +17,13 @@ public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime StartData;
-    private LocalDateTime EndData;
+    private LocalDateTime startData;
+    private LocalDateTime endData;
     private Long user_id;
-    private Long playlist_id;
     private BigDecimal subsPrice;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
 }

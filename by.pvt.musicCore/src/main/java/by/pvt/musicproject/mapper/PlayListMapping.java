@@ -10,7 +10,7 @@ public class PlayListMapping {
         MyPlayListRes myPlayListRes=new MyPlayListRes();
         myPlayListRes.setId(myPlayList.getId());
 //        myPlayListRes.setTrackId(myPlayList.getTrackId());
-        myPlayListRes.setUserId(myPlayList.getUserId());
+//        myPlayListRes.setUserId(myPlayList.getUserId());
         return myPlayListRes;
     }
 
@@ -18,7 +18,7 @@ public class PlayListMapping {
         MyPlayList myPlayList=new MyPlayList();
         myPlayList.setId(myPlayListReq.getId());
 //        myPlayList.setTrackId(myPlayListReq.getTrackId());
-        myPlayList.setUserId(myPlayListReq.getUserId());
+//        myPlayList.setUserId(myPlayListReq.getUserId());
         return myPlayList;
     }
 }

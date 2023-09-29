@@ -15,6 +15,7 @@ public class ProducerRepository implements DaoProducer {
     public ProducerRepository() {
         this.sessionFactory = HibernateConfig.getSessionFactory();
     }
+
     @Override
     public void add(Producer producer) {
         Session session = sessionFactory.openSession();
@@ -23,6 +24,7 @@ public class ProducerRepository implements DaoProducer {
         session.getTransaction().commit();
         session.close();
     }
+
 
     @Override
     public Producer findProducerById(Long id) {

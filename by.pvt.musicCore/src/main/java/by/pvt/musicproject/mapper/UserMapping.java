@@ -12,7 +12,7 @@ public class UserMapping {
         userResponse.setSurname(user.getSurname());
         userResponse.setLogin(userResponse.getLogin());
         userResponse.setPassword(userResponse.getPassword());
-//        userResponse.setMyPlayList(user.getMyPlayList())
+
         userResponse.setRole(user.getRole());
         return userResponse;
     }
@@ -24,7 +24,7 @@ public class UserMapping {
         user.setSurname(userRequest.getSurname());
         user.setLogin(userRequest.getLogin());
         user.setPassword(userRequest.getPassword());
-//        user.setMyPlayList(userRequest.getMyPlayList());
+
         user.setRole(userRequest.getRole());
         return user;
     }
