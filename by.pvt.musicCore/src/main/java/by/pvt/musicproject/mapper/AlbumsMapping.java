@@ -2,24 +2,24 @@ package by.pvt.musicproject.mapper;
 
 import by.pvt.musicproject.dto.AlbumsReq;
 import by.pvt.musicproject.dto.AlbumsRes;
-import by.pvt.musicproject.entity.Albums;
+import by.pvt.musicproject.entity.Album;
 
 public class AlbumsMapping {
-    public AlbumsRes toResponse(Albums albums){
+    public AlbumsRes toResponse(Album album){
         AlbumsRes albumsRes=new AlbumsRes();
-        albumsRes.setId(albums.getId());
-        albumsRes.setName(albums.getName());
-        albumsRes.setRelese(albums.getRelese());
-        albumsRes.setStyle(albums.getStyle());
+        albumsRes.setId(album.getId());
+        albumsRes.setName(album.getName());
+        albumsRes.setRelese(album.getRelese());
+        albumsRes.setStyle(album.getStyle());
         return albumsRes;
     }
 
-    public Albums toAlbumsEntity(AlbumsReq albumsReq){
-        Albums albums=new Albums();
-        albums.setId(albumsReq.getId());
-        albums.setName(albumsReq.getName());
-        albums.setRelese(albumsReq.getRelese());
-        albums.setStyle(albumsReq.getStyle());
-        return albums;
+    public Album toAlbumsEntity(AlbumsReq albumsReq){
+        Album album =new Album();
+        album.setId(albumsReq.getId());
+        album.setName(albumsReq.getName());
+        album.setRelese(albumsReq.getRelese());
+        album.setStyle(albumsReq.getStyle());
+        return album;
     }
 }

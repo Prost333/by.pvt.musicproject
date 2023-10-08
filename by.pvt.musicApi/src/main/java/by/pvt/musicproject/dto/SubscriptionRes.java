@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class SubscriptionRes {
     private Long id;
-    private LocalDateTime StartData;
-    private LocalDateTime EndData;
+    private LocalDateTime startData;
+    private LocalDateTime endData;
     private Long user_id;
     private Long playlist_id;
     private BigDecimal subsPrice;

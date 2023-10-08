@@ -15,7 +15,7 @@ public class HibernateConfig {
 
     static {
         Properties properties= new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "create");
+        properties.setProperty("hibernate.hbm2ddl.auto", "none");
         properties.setProperty("hibernate.use_sql_comments", "true");
         properties.setProperty("hibernate.format_sql", "true");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
@@ -25,14 +25,18 @@ public class HibernateConfig {
         properties.setProperty("hibernate.connection.password", "sa" );
         properties.setProperty("hibernate.show_sql","true");
         properties.setProperty("hibernate.show_format","true");
+        properties.setProperty("hibernate.cache.use_second_level_cache","true");
+        properties.setProperty("hibernate.cache.use_query_cache","true");
+        properties.setProperty("hibernate.cache.region.factory_class",
+                "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+        properties.setProperty("net.sf.ehcache.configurationResourceName","META-INF/config/ehcache.xml");
         conf=new Configuration();
         conf.setProperties(properties);
         conf.addAnnotatedClass(User.class);
-        conf.addAnnotatedClass(Albums.class);
-        conf.addAnnotatedClass(MyPlayList.class);
-        conf.addAnnotatedClass(Performers.class);
+        conf.addAnnotatedClass(Album.class);
+        conf.addAnnotatedClass(Performer.class);
         conf.addAnnotatedClass(Subscription.class);
-        conf.addAnnotatedClass(TrackList.class);
+        conf.addAnnotatedClass(Track.class);
         conf.addAnnotatedClass(Producer.class);
         serviceRegitryBuilder = new StandardServiceRegistryBuilder();
         serviceRegitryBuilder.applySettings(properties);
