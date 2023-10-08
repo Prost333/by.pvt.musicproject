@@ -10,4 +10,5 @@ public interface UserService {
     User findUserById(Long id);
     void deleteUser(Long id);
     List<User> getAllUser();
+    void addTrackToPlaylist(Long trackid, Long userId);
 }

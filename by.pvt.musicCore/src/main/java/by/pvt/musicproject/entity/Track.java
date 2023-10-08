@@ -10,9 +10,10 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Table(schema = "music", name = "track_list")
-public class TrackList {
+public class Track {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "seq_track", sequenceName = "track_seq", allocationSize = 1, schema = "music")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_track")
     private Long id;
     private String track_name;
     private String style;
@@ -21,15 +22,17 @@ public class TrackList {
     @JoinColumn(name = "album_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Albums albumId;
-    @OneToOne
+    private Album albumId;
+    @ManyToOne
     @JoinColumn(name = "performers_id")
-    private Performers performers;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Performer performer;
     private  String file;
     @ManyToMany(mappedBy = "track")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<MyPlayList> myPlayListListId;
+    private List<User> user;
 
 
 }

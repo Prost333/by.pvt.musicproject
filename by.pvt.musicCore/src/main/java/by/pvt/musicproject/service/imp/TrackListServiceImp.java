@@ -1,6 +1,6 @@
 package by.pvt.musicproject.service.imp;
 
-import by.pvt.musicproject.entity.TrackList;
+import by.pvt.musicproject.entity.Track;
 import by.pvt.musicproject.repository.dao.DaoTrackList;
 import by.pvt.musicproject.service.TrackListService;
 
@@ -14,12 +14,12 @@ public class TrackListServiceImp implements TrackListService {
     }
 
     @Override
-    public Long add(TrackList trackList) {
-        return dao.add(trackList);
+    public Long add(Track track) {
+        return dao.add(track);
     }
 
     @Override
-    public TrackList findTrackById(Long id) {
+    public Track findTrackById(Long id) {
         return dao.findTrackById(id);
     }
 
@@ -29,27 +29,46 @@ public class TrackListServiceImp implements TrackListService {
     }
 
     @Override
-    public List<TrackList> getAllList() {
+    public List<Track> getAllList() {
         return dao.getAllList();
     }
 
     @Override
-    public List<TrackList> getTrackByStyle(String style) {
+    public List<Track> getTrackByStyle(String style) {
         return dao.getTrackByStyle(style);
     }
 
     @Override
-    public List<TrackList> findAllByPerformer(Long performer) {
+    public List<Track> findAllByPerformer(Long performer) {
         return dao.findAllByPerformer(performer);
     }
 
     @Override
-    public List<TrackList> findAllByAlbums(Long album) {
+    public List<Track> findAllByAlbums(Long album) {
         return dao.findAllByAlbums(album);
     }
 
     @Override
-    public List<TrackList> findByName(String name) {
+    public List<Track> findByName(String name) {
         return dao.findByName(name);
     }
+
+    public void updateTrack(Track track) {
+        dao.updateTrack(track);
+    }
+
+    @Override
+    public List<Track> findTrackByPerformer(Long id) {
+        return dao.findAllByPerformer(id);
+    }
+
+    @Override
+    public List<Track> findUserPlayList(Long id) {
+        return dao.findUserPlayList(id);
+    }
+
+    public List<String> getAllFile() {
+        return dao.getAllFile();
+    }
+
 }

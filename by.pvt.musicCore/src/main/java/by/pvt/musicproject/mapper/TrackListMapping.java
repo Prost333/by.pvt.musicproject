@@ -2,30 +2,30 @@ package by.pvt.musicproject.mapper;
 
 import by.pvt.musicproject.dto.TrackListReq;
 import by.pvt.musicproject.dto.TrackListRes;
-import by.pvt.musicproject.entity.TrackList;
+import by.pvt.musicproject.entity.Track;
 
 public class TrackListMapping {
-    public TrackListRes toResponse(TrackList trackList){
+    public TrackListRes toResponse(Track track){
         TrackListRes trackListRes=new TrackListRes();
-        trackListRes.setTrack_name(trackList.getTrack_name());
-        trackListRes.setStyle(trackList.getStyle());
-        trackListRes.setLenght(trackList.getLenght());
-        trackListRes.setFile(trackList.getFile());
-//        trackListRes.setId_albom(trackList.getId_albom());
-//        trackListRes.setId_performers(trackList.getId_performers());
-        trackListRes.setId(trackList.getId());
+        trackListRes.setTrack_name(track.getTrack_name());
+        trackListRes.setStyle(track.getStyle());
+        trackListRes.setLenght(track.getLenght());
+        trackListRes.setFile(track.getFile());
+//        trackListRes.setId_albom(track.getId_albom());
+//        trackListRes.setId_performers(track.getId_performers());
+        trackListRes.setId(track.getId());
         return trackListRes;
     }
 
-    public  TrackList toTrackListEntity(TrackListReq trackListReq){
-        TrackList trackList=new TrackList();
-        trackList.setFile(trackList.getFile());
-        trackList.setTrack_name(trackListReq.getTrack_name());
-        trackList.setId(trackListReq.getId());
-        trackList.setLenght(trackListReq.getLenght());
-//        trackList.setId_albom(trackListReq.getId_albom());
-//        trackList.setId_performers(trackListReq.getId_performers());
-        trackList.setStyle(trackListReq.getStyle());
-        return  trackList;
+    public Track toTrackListEntity(TrackListReq trackListReq){
+        Track track =new Track();
+        track.setFile(track.getFile());
+        track.setTrack_name(trackListReq.getTrack_name());
+        track.setId(trackListReq.getId());
+        track.setLenght(trackListReq.getLenght());
+//        track.setId_albom(trackListReq.getId_albom());
+//        track.setId_performers(trackListReq.getId_performers());
+        track.setStyle(trackListReq.getStyle());
+        return track;
     }
 }

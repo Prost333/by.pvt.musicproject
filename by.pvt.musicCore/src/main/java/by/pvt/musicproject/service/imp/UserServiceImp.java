@@ -1,12 +1,10 @@
 package by.pvt.musicproject.service.imp;
 
 import by.pvt.musicproject.dto.UserRequest;
-import by.pvt.musicproject.entity.MyPlayList;
+import by.pvt.musicproject.dto.UserResponse;
 import by.pvt.musicproject.entity.Producer;
 import by.pvt.musicproject.entity.User;
-import by.pvt.musicproject.mapper.PlayListMapping;
 import by.pvt.musicproject.mapper.UserMapping;
-import by.pvt.musicproject.repository.MyPlayListRepository;
 import by.pvt.musicproject.repository.dao.DaoUser;
 import by.pvt.musicproject.service.UserService;
 
@@ -15,21 +13,17 @@ import java.util.List;
 public class UserServiceImp implements UserService {
 
     private final DaoUser dao;
-    private PlayListMapping playListMapping = new PlayListMapping();
-    private MyPlayListRepository myPlayListRepository = new MyPlayListRepository();
-    private UserMapping userMapping;
+
+    private UserMapping userMapping = new UserMapping();
 
     public UserServiceImp(DaoUser dao) {
         this.dao = dao;
     }
 
-    public void addUser(UserRequest userRequest) {
-        Long playlistid = null;
-        MyPlayList myPlayList = myPlayListRepository.findPlayListById(userRequest.getId());
-        User user = userMapping.toUserEntity(userRequest);
-        playlistid=myPlayListRepository.add(myPlayList);
-
-
+    public User addReq(UserRequest clientRequest) {
+        User client = userMapping.toUserEntity(clientRequest);
+        dao.add(client);
+        return client;
     }
 
     public void add(User user) {
@@ -46,5 +40,10 @@ public class UserServiceImp implements UserService {
 
     public List<User> getAllUser() {
         return dao.getAllUser();
+    }
+
+    @Override
+    public void addTrackToPlaylist(Long trackid, Long userId) {
+        dao.addTrackToPlaylist(trackid, userId);
     }
 }

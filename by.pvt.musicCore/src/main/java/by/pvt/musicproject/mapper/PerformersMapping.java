@@ -2,21 +2,21 @@ package by.pvt.musicproject.mapper;
 
 import by.pvt.musicproject.dto.PerformersReq;
 import by.pvt.musicproject.dto.PerformersRes;
-import by.pvt.musicproject.entity.Performers;
+import by.pvt.musicproject.entity.Performer;
 
 public class PerformersMapping {
-    public PerformersRes toResponsr(Performers performers){
+    public PerformersRes toResponsr(Performer performer){
         PerformersRes performersRes=new PerformersRes();
-        performersRes.setClosenes(performers.getClosenes());
-        performersRes.setId(performers.getId());
-        performersRes.setName(performers.getName());
+        performersRes.setClosenes(performer.getClosenes());
+        performersRes.setId(performer.getId());
+        performersRes.setName(performer.getName());
         return performersRes;
     }
-    public Performers toPerformersEntity(PerformersReq performersReq){
-        Performers performers= new Performers();
-        performers.setClosenes(performersReq.getClosenes());
-        performers.setId(performersReq.getId());
-        performers.setName(performersReq.getName());
-        return performers;
+    public Performer toPerformersEntity(PerformersReq performersReq){
+        Performer performer = new Performer();
+        performer.setClosenes(performersReq.getClosenes());
+        performer.setId(performersReq.getId());
+        performer.setName(performersReq.getName());
+        return performer;
     }
 }

@@ -12,5 +12,6 @@ public interface DaoUser {
     void deleteUser(Long id);
 
     List<User> getAllUser();
+    void addTrackToPlaylist(Long trackid, Long userId);
 }
 

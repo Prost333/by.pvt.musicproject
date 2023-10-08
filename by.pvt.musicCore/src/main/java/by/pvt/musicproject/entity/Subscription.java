@@ -15,14 +15,15 @@ import java.time.LocalDateTime;
 @Table(schema = "music", name = "subscription")
 public class Subscription {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "seq_subscription", sequenceName = "subscription_seq", allocationSize = 1, schema = "music")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_subscription")
     private Long id;
     private LocalDateTime startData;
     private LocalDateTime endData;
     private Long user_id;
     private BigDecimal subsPrice;
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
 

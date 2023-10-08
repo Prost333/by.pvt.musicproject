@@ -1,20 +1,24 @@
 package by.pvt.musicproject.repository.dao;
 
-import by.pvt.musicproject.entity.TrackList;
+import by.pvt.musicproject.entity.Track;
 
 import java.util.List;
 
 public interface DaoTrackList {
-    Long add(TrackList trackList);
+    Long add(Track track);
 
-    TrackList findTrackById(Long id);
+    Track findTrackById(Long id);
 
     void deleteTrackList(Long id);
 
-    List<TrackList> getAllList();
+    List<Track> getAllList();
 
-    List<TrackList> getTrackByStyle(String style);
-    List<TrackList> findAllByPerformer(Long performer);
-    List<TrackList> findAllByAlbums(Long album);
-    List<TrackList> findByName(String name);
+    List<Track> getTrackByStyle(String style);
+    List<Track> findAllByPerformer(Long performer);
+    List<Track> findAllByAlbums(Long album);
+    List<Track> findByName(String name);
+     void updateTrack(Track track);
+    List <Track> findTrackByPerformer(Long id);
+    List <Track> findUserPlayList(Long id);
+    List<String> getAllFile();
 }

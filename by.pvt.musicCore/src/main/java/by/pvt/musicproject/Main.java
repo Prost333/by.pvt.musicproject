@@ -1,40 +1,41 @@
 package by.pvt.musicproject;
 
-import by.pvt.musicproject.entity.MyPlayList;
-import by.pvt.musicproject.entity.TrackList;
+import by.pvt.musicproject.entity.Performer;
+import by.pvt.musicproject.entity.Track;
 import by.pvt.musicproject.entity.User;
-import by.pvt.musicproject.repository.MyPlayListRepository;
-import by.pvt.musicproject.repository.ProducerRepository;
-import by.pvt.musicproject.repository.UserRepository;
-import by.pvt.musicproject.repository.TrackListRepository;
-import by.pvt.musicproject.service.MyPlayListService;
-import by.pvt.musicproject.service.ProducerService;
-import by.pvt.musicproject.service.TrackListService;
-import by.pvt.musicproject.service.UserService;
-import by.pvt.musicproject.service.imp.MyPlayListServiceImp;
-import by.pvt.musicproject.service.imp.ProducerServiceImp;
-import by.pvt.musicproject.service.imp.TrackListServiceImp;
-import by.pvt.musicproject.service.imp.UserServiceImp;
-
-import java.util.List;
+import by.pvt.musicproject.music.RecordPlayer;
+import by.pvt.musicproject.repository.*;
+import by.pvt.musicproject.service.*;
+import by.pvt.musicproject.service.imp.*;
 
 public class Main {
     public static void main(String[] args) {
-//        RecordPlayer recordPlayer =new RecordPlayer();
+        RecordPlayer recordPlayer =new RecordPlayer();
 //        String file = "The-Doors-Spanish-Caravan.wav";
 //        recordPlayer.Play(file);
 
-
-
+        PerformerService performerService = new PerformerServiceImp(new PerformerRepository());
         UserService userService = new UserServiceImp(new UserRepository());
         ProducerService producerService = new ProducerServiceImp(new ProducerRepository());
-        MyPlayListService myPlayListService= new MyPlayListServiceImp(new MyPlayListRepository());
-        TrackListService trackListService=new TrackListServiceImp(new TrackListRepository());
-//        TrackList one=new TrackList();
+
+        // добавление треку исполнителя
+        TrackListService trackListService = new TrackListServiceImp(new TrackListRepository());
+        TrackListRepository trackListRepository=new TrackListRepository();
+//        System.out.println(trackListRepository.findTrackByPerformer(1L));
+//        System.out.println(trackListRepository.findUserPlayList(1L));
+//        Track track = trackListService.findTrackById(1L);
+//        track.setPerformer(performerService.findPerformerById(1L));
+//        trackListService.updateTrack(track);
+        recordPlayer.Playlist(trackListService.getAllFile());
+
+
+
+//        Track one=new Track();
 //        one.setStyle("rock");
-//        one.setFile("The-Doors-Alabama-Song.wav");
-//        one.setLenght("9:30");
-//        one.setTrack_name("People-Are-Strange");
+//        one.setFile("The-Doors-When-Music-is-Over.wav");
+//        one.setLenght("8:30");
+//        one.setTrack_name("When Music is Over");
+//        one.setPerformer(performerService.findPerformerById(1L));
 //        trackListService.add(one);
 //        MyPlayList playList=new MyPlayList();
 //        myPlayListService.add(playList);
@@ -43,17 +44,18 @@ public class Main {
 //        getTrackId(2L);
 
 //        System.out.println(trackListService.getTrackByStyle("rock"));
-        myPlayListService.findTrackByName("The-Doors-People-Are-Strange.wav",1L);
+//        myPlayListService.findTrackByName("The-Doors-People-Are-Strange.wav",1L);
 
 
 //        User user = new User();
 //        user.setName("dima");
 //        user.setLogin("dima");
 //        user.setSurname("bol");
-//        user.setMyPlayListId(playList);
+////        user.setMyPlayListId(playList);
 //        user.setRole("us");
 //        user.setPassword("1");
 //        userService.add(user);
+//        userService.addTrackToPlaylist(2L,1L);
 
 //        Producer producer = new Producer();
 //        producer.setCompany("Record");
@@ -68,14 +70,19 @@ public class Main {
 
 //        System.out.println(userService.getAllUser());
 //        System.out.println(producerService.getAllProducer());
+
+//        Performer performer=new Performer();
+//        performer.setName("The Doors");
+//        performer.setClosenes("1");
+//        performerService.add(performer);
+
     }
 
 
-    public static void getTrackId(Long trackid){
+    public static void getTrackId(Long trackid) {
         TrackListRepository trackListRepository = new TrackListRepository();
         System.out.println(trackListRepository.findTrackById(trackid));
     }
-
 
 
 }

@@ -11,9 +11,10 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Table(schema = "music", name = "albums")
-public class Albums {
+public class Album {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "seq_album", sequenceName = "album_seq", allocationSize = 1, schema = "music")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_album")
     private Long id;
     private String name;
     private String style;
@@ -22,12 +23,12 @@ public class Albums {
     @JoinColumn(name = "performers_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Performers performers;
+    private Performer performer;
     @OneToMany
-    @JoinColumn(name= "track_id")
+//    @JoinColumn(name= "track_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<TrackList> trackList;
+    private List<Track> track;
 
 
 }

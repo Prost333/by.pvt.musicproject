@@ -10,7 +10,7 @@ public class SubscriptionMapping {
         SubscriptionRes subscriptionRes = new SubscriptionRes();
         subscriptionRes.setId(subscription.getId());
         subscriptionRes.setEndData(subscription.getEndData());
-        subscriptionRes.setPlaylist_id(subscription.getPlaylist_id());
+//        subscriptionRes.setPlaylist_id(subscription.getPlaylist_id());
         subscriptionRes.setUser_id(subscription.getUser_id());
         subscriptionRes.setStartData(subscription.getStartData());
         subscriptionRes.setSubsPrice(subscription.getSubsPrice());
@@ -21,7 +21,7 @@ public class SubscriptionMapping {
         Subscription subscription = new Subscription();
         subscription.setId(subscriptionReq.getId());
         subscription.setEndData(subscriptionReq.getEndData());
-        subscription.setPlaylist_id(subscriptionReq.getPlaylist_id());
+//        subscription.setPlaylist_id(subscriptionReq.getPlaylist_id());
         subscription.setUser_id(subscriptionReq.getUser_id());
         subscription.setStartData(subscriptionReq.getStartData());
         subscription.setSubsPrice(subscriptionReq.getSubsPrice());

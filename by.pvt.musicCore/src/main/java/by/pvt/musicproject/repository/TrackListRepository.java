@@ -1,13 +1,20 @@
 package by.pvt.musicproject.repository;
 
 import by.pvt.musicproject.configuration.HibernateConfig;
-import by.pvt.musicproject.entity.MyPlayList;
-import by.pvt.musicproject.entity.TrackList;
+import by.pvt.musicproject.entity.Performer;
+import by.pvt.musicproject.entity.Track;
+import by.pvt.musicproject.entity.User;
 import by.pvt.musicproject.repository.dao.DaoTrackList;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class TrackListRepository implements DaoTrackList {
@@ -18,21 +25,21 @@ public class TrackListRepository implements DaoTrackList {
     }
 
     @Override
-    public Long add(TrackList trackList) {
+    public Long add(Track track) {
         Session session = sessionFactory.openSession();
         session.getTransaction().begin();
-        session.persist(trackList);
+        session.persist(track);
         session.getTransaction().commit();
         session.close();
-        return trackList.getId();
+        return track.getId();
     }
 
     @Override
-    public TrackList findTrackById(Long id) {
+    public Track findTrackById(Long id) {
         Session session = sessionFactory.openSession();
-        TrackList trackList = session.get(TrackList.class, id);
+        Track track = session.get(Track.class, id);
         session.close();
-        return trackList;
+        return track;
     }
 
     @Override
@@ -45,64 +52,105 @@ public class TrackListRepository implements DaoTrackList {
     }
 
     @Override
-    public List<TrackList> getAllList() {
+    public List<Track> getAllList() {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("Select s from TrackList s");
-        return (List<TrackList>) query.getResultList();
+        Query query = session.createQuery("Select s from Track s");
+        return (List<Track>) query.getResultList();
+    }
+    public List<String> getAllFile() {
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery("Select s.file from Track s");
+        return (List<String>) query.getResultList();
     }
 
-    public List<TrackList> findAllByIds(List<Long> ids) {
+    public List<Track> findAllByIds(List<Long> ids) {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("select s from TrackList s where s.id in(:ids)");
+        Query query = session.createQuery("select s from Track s where s.id in(:ids)");
         query.setParameter("ids", ids);
-        List<TrackList> trackList = (List<TrackList>) query.getResultList();
+        List<Track> track = (List<Track>) query.getResultList();
         session.close();
-        return trackList;
+        return track;
     }
 
-    public void updateTrack(TrackList trackList) {
+    public void updateTrack(Track track) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        session.merge(trackList);
+        session.merge(track);
         session.getTransaction().commit();
         session.close();
     }
 
-    public List<TrackList> getTrackByStyle(String style) {
+    public List<Track> getTrackByStyle(String style) {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("select s from TrackList s where s.style in (:style)");
+        Query query = session.createQuery("select s from Track s where s.style in (:style)");
         query.setParameter("style", style);
-        List<TrackList> trackList = (List<TrackList>) query.getResultList();
+        List<Track> track = (List<Track>) query.getResultList();
         session.close();
-        return trackList;
+        return track;
     }
 
-    public List<TrackList> findAllByPerformer(Long performer) {
+    public List<Track> findAllByPerformer(Long performer) {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("select s from TrackList s where s.performers in (:performer)");
+        Query query = session.createQuery("select s from Track s where s.performers in (:performer)");
         query.setParameter("performer", performer);
-        List<TrackList> trackList = (List<TrackList>) query.getResultList();
+        List<Track> track = (List<Track>) query.getResultList();
         session.close();
-        return trackList;
+        return track;
     }
 
-    public List<TrackList> findAllByAlbums(Long album) {
+    public List<Track> findAllByAlbums(Long album) {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("select s from TrackList s where s.album in (:album)");
+        Query query = session.createQuery("select s from Track s where s.album in (:album)");
         query.setParameter("album", album);
-        List<TrackList> trackList = (List<TrackList>) query.getResultList();
+        List<Track> track = (List<Track>) query.getResultList();
         session.close();
-        return trackList;
+        return track;
     }
 
-    public List<TrackList> findByName(String name) {
+    public List<Track> findByName(String name) {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("select s from TrackList s where s.name in (:name)");
+        Query query = session.createQuery("select s from Track s where s.name in (:name)");
         query.setParameter("name", name);
-        List<TrackList> trackList = (List<TrackList>) query.getResultList();
+        List<Track> track = (List<Track>) query.getResultList();
         session.close();
+        return track;
+    }
+    public List<Track> findAllWithPagination(int size, int page) {
+        EntityManager entityManager = sessionFactory.createEntityManager();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Track> criteriaQuery = criteriaBuilder.createQuery(Track.class);
+        Root<Track> track = criteriaQuery.from(Track.class);
+        criteriaQuery.select(track).orderBy(criteriaBuilder.asc(track.get("id")));
+
+        TypedQuery<Track> typedQuery = entityManager.createQuery(criteriaQuery);
+        typedQuery.setMaxResults(size);
+        typedQuery.setFirstResult(page);
+
+        List<Track> trackList = typedQuery.getResultList();
         return trackList;
     }
+    public  List <Track> findTrackByPerformer(Long id){
+        EntityManager entityManager = sessionFactory.createEntityManager();
+        CriteriaBuilder criteriaBuilder=entityManager.getCriteriaBuilder();
+        CriteriaQuery<Track>criteriaQuery=criteriaBuilder.createQuery(Track.class);
+        Root<Track> trackRoot=criteriaQuery.from(Track.class);
+        Join<Track, Performer>performer=trackRoot.join("performer");
+        criteriaQuery.where(criteriaBuilder.equal(performer.get("id"), id));
+        List<Track>tracks=entityManager.createQuery(criteriaQuery).getResultList();
+        return tracks;
+    }
+    public  List <Track> findUserPlayList(Long id){
+        EntityManager entityManager = sessionFactory.createEntityManager();
+        CriteriaBuilder criteriaBuilder=entityManager.getCriteriaBuilder();
+        CriteriaQuery<Track>criteriaQuery=criteriaBuilder.createQuery(Track.class);
+        Root<Track> trackRoot=criteriaQuery.from(Track.class);
+        Join<Track, User>performer=trackRoot.join("user");
+        criteriaQuery.where(criteriaBuilder.equal(performer.get("id"), id));
+        List<Track>tracks=entityManager.createQuery(criteriaQuery).getResultList();
+        return tracks;
+    }
+
+
 
 
 }
