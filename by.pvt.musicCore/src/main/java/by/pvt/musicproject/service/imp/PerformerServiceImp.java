@@ -1,47 +1,62 @@
 package by.pvt.musicproject.service.imp;
 
-import by.pvt.musicproject.entity.Performer;
-import by.pvt.musicproject.mapper.UserMapping;
+import by.pvt.musicproject.entity.*;
 import by.pvt.musicproject.repository.dao.DaoPerformer;
-import by.pvt.musicproject.repository.dao.DaoProducer;
-import by.pvt.musicproject.service.PerformerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-public class PerformerServiceImp implements PerformerService {
+@Service
+public class PerformerServiceImp {
+
     private final DaoPerformer dao;
 
+    @Autowired
     public PerformerServiceImp(DaoPerformer dao) {
         this.dao = dao;
     }
 
-    @Override
+
     public void add(Performer performer) {
-        dao.add(performer);
+        dao.save(performer);
     }
 
-    @Override
+
     public Performer findPerformerById(Long id) {
-        return dao.findPerformerById(id);
+        Optional<Performer> performer = Optional.of(dao.findById(id).orElseThrow());
+        return performer.get();
     }
 
-    @Override
-    public Performer findPerformerByName(String name) {
-        return dao.findPerformerByName(name);
+
+    public List<Performer> findPerformerByName(String name) {
+        return dao.findByName(name);
     }
 
-    @Override
-    public void deletePerformer(Long id) {
-        dao.deletePerformer(id);
+
+    public void deletePerformer(Performer performer) {
+        dao.delete(performer);
     }
 
-    @Override
     public List<Performer> getAllPerformer() {
-        return dao.getAllPerformer();
+        return dao.findAll();
     }
 
-    @Override
-    public List<Performer> detachCriteria(String name) {
-        return dao.detachCriteria(name);
+    public Page<Performer> findAllOrderById(Pageable pageable) {
+        return findAllOrderById(pageable);
     }
+    public Performer addAlbumToPerformer(Long performerId, Album album) {
+        Performer performer = dao.findById(performerId).orElse(null);
+        if (performer != null) {
+            performer.getAlbum().add(album);
+            return dao.save(performer);
+        } else {
+
+            return null;
+        }}
+
+
 }

@@ -5,11 +5,11 @@ import by.pvt.musicproject.entity.Track;
 import java.util.List;
 
 public interface TrackListService {
-    Long add(Track track);
+    Track add(Track track);
 
     Track findTrackById(Long id);
 
-    void deleteTrackList(Long id);
+    void deleteTrackList(Track track);
 
     List<Track> getAllList();
 

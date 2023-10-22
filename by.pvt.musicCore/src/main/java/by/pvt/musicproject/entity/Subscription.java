@@ -1,17 +1,21 @@
 package by.pvt.musicproject.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import lombok.Data;
+
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
 @Entity
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Table(schema = "music", name = "subscription")
 public class Subscription {
     @Id

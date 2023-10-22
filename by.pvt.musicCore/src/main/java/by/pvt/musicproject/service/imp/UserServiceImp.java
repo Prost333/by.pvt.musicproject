@@ -1,49 +1,46 @@
 package by.pvt.musicproject.service.imp;
 
 import by.pvt.musicproject.dto.UserRequest;
-import by.pvt.musicproject.dto.UserResponse;
-import by.pvt.musicproject.entity.Producer;
+import by.pvt.musicproject.entity.Rating;
+import by.pvt.musicproject.entity.Track;
 import by.pvt.musicproject.entity.User;
-import by.pvt.musicproject.mapper.UserMapping;
 import by.pvt.musicproject.repository.dao.DaoUser;
 import by.pvt.musicproject.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-public class UserServiceImp implements UserService {
-
-    private final DaoUser dao;
-
-    private UserMapping userMapping = new UserMapping();
-
-    public UserServiceImp(DaoUser dao) {
-        this.dao = dao;
-    }
-
-    public User addReq(UserRequest clientRequest) {
-        User client = userMapping.toUserEntity(clientRequest);
-        dao.add(client);
-        return client;
-    }
+@Service
+public class UserServiceImp  {
+    @Autowired
+    private DaoUser dao;
 
     public void add(User user) {
-        dao.add(user);
+        dao.save(user);
     }
 
     public User findUserById(Long id) {
-        return dao.findUserById(id);
+        Optional<User> user = Optional.of(dao.findById(id).orElseThrow());
+        return user.get();
     }
 
-    public void deleteUser(Long id) {
-        dao.deleteUser(id);
+    public void deleteUser(User user) {
+        dao.delete(user);
     }
 
     public List<User> getAllUser() {
-        return dao.getAllUser();
+        return dao.findAll();
     }
 
-    @Override
-    public void addTrackToPlaylist(Long trackid, Long userId) {
-        dao.addTrackToPlaylist(trackid, userId);
-    }
+    public User addTrackToUser(Long userId, Track track) {
+        User user = dao.findById(userId).orElse(null);
+        if (user != null) {
+            user.getTrack().add(track);
+            return dao.save(user);
+        } else {
+
+            return null;
+        }}
 }

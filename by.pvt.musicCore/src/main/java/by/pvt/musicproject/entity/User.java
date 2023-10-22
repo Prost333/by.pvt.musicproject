@@ -2,15 +2,16 @@ package by.pvt.musicproject.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Getter
+@Setter
+@ToString
 @Table(schema = "music", name = "user")
 @Inheritance(strategy = InheritanceType.JOINED)
-@Entity
+
 public class User {
     @Id
     @SequenceGenerator(name = "seq_user", sequenceName = "user_seq", allocationSize = 1, schema = "music")
@@ -25,15 +26,13 @@ public class User {
     private String login;
     @Column(name = "password")
     private String password;
-//    @OneToOne
-//    @JoinColumn(name = "playlist_id")
-//    private MyPlayList myPlayListId;
+
     @OneToOne
-    @JoinColumn(name = "user_id", insertable = false,updatable = false)
+    @JoinColumn(name = "subscription", insertable = false,updatable = false)
     private Subscription subscription;
     @Column(name = "role")
     private String role;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(schema = "music",
             name= "playlist",
             joinColumns = {@JoinColumn(name="user_id")},

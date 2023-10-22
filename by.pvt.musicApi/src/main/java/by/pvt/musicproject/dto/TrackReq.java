@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 @Entity
 @NoArgsConstructor
-public class TrackListRes {
+public class TrackReq {
     private Long id;
     private String track_name;
     private String style;

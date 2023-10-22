@@ -3,15 +3,16 @@ package by.pvt.musicproject.entity;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
 @Entity
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Table(schema = "music", name = "performers")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "performer")
+@Cacheable
 public class Performer {
     @Id
     @SequenceGenerator(name = "seq_performer", sequenceName = "performer_seq", allocationSize = 1, schema = "music")

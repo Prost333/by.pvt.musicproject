@@ -10,12 +10,10 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 @Entity
 @NoArgsConstructor
-public class TrackListReq {
+public class TrackRes {
     private Long id;
     private String track_name;
     private String style;
     private String lenght;
-    private Long id_albom;
-    private Long id_performers;
     private  String file;
 }

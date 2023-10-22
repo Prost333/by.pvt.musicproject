@@ -1,24 +1,19 @@
 package by.pvt.musicproject.repository.dao;
 
+import by.pvt.musicproject.entity.Album;
+import by.pvt.musicproject.entity.Performer;
+import by.pvt.musicproject.entity.Rating;
 import by.pvt.musicproject.entity.Track;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface DaoTrackList {
-    Long add(Track track);
+public interface DaoTrackList extends JpaRepository<Track,Long>  {
 
-    Track findTrackById(Long id);
-
-    void deleteTrackList(Long id);
-
-    List<Track> getAllList();
-
-    List<Track> getTrackByStyle(String style);
-    List<Track> findAllByPerformer(Long performer);
-    List<Track> findAllByAlbums(Long album);
+    List<Track> findByStyle(String style);
+    List<Track> findByPerformer(Performer performer);
+    List<Track> findByAlbums(Album album);
     List<Track> findByName(String name);
-     void updateTrack(Track track);
-    List <Track> findTrackByPerformer(Long id);
-    List <Track> findUserPlayList(Long id);
-    List<String> getAllFile();
+
+//    List<String> findAllByFile();
 }

@@ -1,12 +1,13 @@
 package by.pvt.musicproject.music;
 
 import javax.sound.sampled.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class RecordPlayer {
-    public void Play (String file){
+    public void play(String file){
         try {
             File joy = new File("C:\\musikdb\\wav\\"+file);
             AudioInputStream ais = AudioSystem.getAudioInputStream(joy);
@@ -38,7 +39,6 @@ public class RecordPlayer {
         }catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
             exc.printStackTrace();
         } catch (InterruptedException exc) {}
-
-
     }
+
 }

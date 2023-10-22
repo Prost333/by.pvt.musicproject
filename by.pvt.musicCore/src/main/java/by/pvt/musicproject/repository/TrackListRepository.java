@@ -7,8 +7,11 @@ import by.pvt.musicproject.entity.User;
 import by.pvt.musicproject.repository.dao.DaoTrackList;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -16,56 +19,21 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Optional;
 
-public class TrackListRepository implements DaoTrackList {
-    private final SessionFactory sessionFactory;
+@Repository
+public class TrackListRepository  {
+    private SessionFactory sessionFactory;
 
-    public TrackListRepository() {
-        this.sessionFactory = HibernateConfig.getSessionFactory();
-    }
-
-    @Override
-    public Long add(Track track) {
-        Session session = sessionFactory.openSession();
-        session.getTransaction().begin();
-        session.persist(track);
-        session.getTransaction().commit();
-        session.close();
-        return track.getId();
-    }
-
-    @Override
-    public Track findTrackById(Long id) {
-        Session session = sessionFactory.openSession();
-        Track track = session.get(Track.class, id);
-        session.close();
-        return track;
-    }
-
-    @Override
-    public void deleteTrackList(Long id) {
-        Session session = sessionFactory.openSession();
-        session.getTransaction().begin();
-        session.delete(findTrackById(id));
-        session.getTransaction().commit();
-        session.close();
-    }
-
-    @Override
-    public List<Track> getAllList() {
-        Session session = sessionFactory.openSession();
-        Query query = session.createQuery("Select s from Track s");
-        return (List<Track>) query.getResultList();
-    }
     public List<String> getAllFile() {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("Select s.file from Track s");
+        Query query = (Query) session.createQuery("Select s.file from Track s");
         return (List<String>) query.getResultList();
     }
 
     public List<Track> findAllByIds(List<Long> ids) {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("select s from Track s where s.id in(:ids)");
+        Query query = (Query) session.createQuery("select s from Track s where s.id in(:ids)");
         query.setParameter("ids", ids);
         List<Track> track = (List<Track>) query.getResultList();
         session.close();
@@ -82,7 +50,7 @@ public class TrackListRepository implements DaoTrackList {
 
     public List<Track> getTrackByStyle(String style) {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("select s from Track s where s.style in (:style)");
+        Query query = (Query) session.createQuery("select s from Track s where s.style in (:style)");
         query.setParameter("style", style);
         List<Track> track = (List<Track>) query.getResultList();
         session.close();
@@ -91,7 +59,7 @@ public class TrackListRepository implements DaoTrackList {
 
     public List<Track> findAllByPerformer(Long performer) {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("select s from Track s where s.performers in (:performer)");
+        Query query = (Query) session.createQuery("select s from Track s where s.performers in (:performer)");
         query.setParameter("performer", performer);
         List<Track> track = (List<Track>) query.getResultList();
         session.close();
@@ -100,7 +68,7 @@ public class TrackListRepository implements DaoTrackList {
 
     public List<Track> findAllByAlbums(Long album) {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("select s from Track s where s.album in (:album)");
+        Query query = (Query) session.createQuery("select s from Track s where s.album in (:album)");
         query.setParameter("album", album);
         List<Track> track = (List<Track>) query.getResultList();
         session.close();
@@ -109,14 +77,14 @@ public class TrackListRepository implements DaoTrackList {
 
     public List<Track> findByName(String name) {
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("select s from Track s where s.name in (:name)");
+        Query query = (Query) session.createQuery("select s from Track s where s.name in (:name)");
         query.setParameter("name", name);
         List<Track> track = (List<Track>) query.getResultList();
         session.close();
         return track;
     }
     public List<Track> findAllWithPagination(int size, int page) {
-        EntityManager entityManager = sessionFactory.createEntityManager();
+        EntityManager entityManager = (EntityManager) sessionFactory.createEntityManager();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Track> criteriaQuery = criteriaBuilder.createQuery(Track.class);
         Root<Track> track = criteriaQuery.from(Track.class);
@@ -130,7 +98,7 @@ public class TrackListRepository implements DaoTrackList {
         return trackList;
     }
     public  List <Track> findTrackByPerformer(Long id){
-        EntityManager entityManager = sessionFactory.createEntityManager();
+        EntityManager entityManager = (EntityManager) sessionFactory.createEntityManager();
         CriteriaBuilder criteriaBuilder=entityManager.getCriteriaBuilder();
         CriteriaQuery<Track>criteriaQuery=criteriaBuilder.createQuery(Track.class);
         Root<Track> trackRoot=criteriaQuery.from(Track.class);
@@ -140,7 +108,7 @@ public class TrackListRepository implements DaoTrackList {
         return tracks;
     }
     public  List <Track> findUserPlayList(Long id){
-        EntityManager entityManager = sessionFactory.createEntityManager();
+        EntityManager entityManager = (EntityManager) sessionFactory.createEntityManager();
         CriteriaBuilder criteriaBuilder=entityManager.getCriteriaBuilder();
         CriteriaQuery<Track>criteriaQuery=criteriaBuilder.createQuery(Track.class);
         Root<Track> trackRoot=criteriaQuery.from(Track.class);
