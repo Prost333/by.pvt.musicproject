@@ -1,19 +1,16 @@
-package by.pvt.musicproject.entity;
+package by.pvt.musicproject.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
 
 @Data
 @AllArgsConstructor
 @Entity
 @NoArgsConstructor
-@Table(schema = "music", name = "track_list")
-public class TrackList {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TrackReq {
     private Long id;
     private String track_name;
     private String style;
@@ -21,6 +18,4 @@ public class TrackList {
     private Long id_albom;
     private Long id_performers;
     private  String file;
-
-
 }
