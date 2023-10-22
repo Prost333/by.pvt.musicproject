@@ -1,9 +1,7 @@
 package by.pvt.musicproject.service.imp;
 
 import by.pvt.musicproject.entity.Subscription;
-import by.pvt.musicproject.entity.Track;
-import by.pvt.musicproject.repository.dao.DaoSubscription;
-import by.pvt.musicproject.service.SubscriptionService;
+import by.pvt.musicproject.repository.DaoSubscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package by.pvt.musicproject.repository.dao;
+package by.pvt.musicproject.repository;
 
 import by.pvt.musicproject.entity.Producer;
 import by.pvt.musicproject.entity.Subscription;

@@ -2,11 +2,8 @@ package by.pvt.musicproject.service.imp;
 
 import by.pvt.musicproject.entity.Album;
 import by.pvt.musicproject.entity.Track;
-import by.pvt.musicproject.entity.User;
-import by.pvt.musicproject.repository.dao.DaoAlbum;
+import by.pvt.musicproject.repository.DaoAlbum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,7 +47,6 @@ public class AlbumServiceImp {
             album.getTrack().add(track);
             return daoAlbum.save(album);
         } else {
-
             return null;
         }}
 

@@ -1,7 +1,7 @@
 package by.pvt.musicproject.service.imp;
 
 import by.pvt.musicproject.entity.Rating;
-import by.pvt.musicproject.repository.dao.DaoRating;
+import by.pvt.musicproject.repository.DaoRating;
 import by.pvt.musicproject.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

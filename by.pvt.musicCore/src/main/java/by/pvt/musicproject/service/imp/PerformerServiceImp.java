@@ -1,7 +1,7 @@
 package by.pvt.musicproject.service.imp;
 
 import by.pvt.musicproject.entity.*;
-import by.pvt.musicproject.repository.dao.DaoPerformer;
+import by.pvt.musicproject.repository.DaoPerformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -2,10 +2,8 @@ package by.pvt.musicproject.service.imp;
 
 import by.pvt.musicproject.entity.Album;
 import by.pvt.musicproject.entity.Performer;
-import by.pvt.musicproject.entity.Rating;
 import by.pvt.musicproject.entity.Track;
-import by.pvt.musicproject.repository.dao.DaoTrackList;
-import by.pvt.musicproject.service.TrackListService;
+import by.pvt.musicproject.repository.DaoTrackList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,23 +36,26 @@ public class TrackListServiceImp {
     public List<Track> getAllList() {
         return dao.findAll();
     }
-    List<Track> findByStyle(String style){
+    public List<Track> findByStyle(String style){
         return dao.findByStyle(style);
     }
-    List<Track> findByPerformer(Performer performer){
+    public List<Track> findByPerformer(Performer performer){
         return dao.findByPerformer(performer);
     }
 
-    List<Track> findByAlbums(Album album){
+    public List<Track> findByAlbums(Album album){
         return dao.findByAlbums(album);
     }
-    List<Track> findByName(String name){
+    public List<Track> findByName(String name){
         return  dao.findByName(name);
     }
 
-//    List<String> findAllByFile(){
-//        return  dao.findAllByFile();
-//    }
+    public List<String> findAllByFile(){
+            List<Track> tracks = dao.findAll();
+            return tracks.stream()
+                    .map(Track::getFile)
+                    .toList();
+        }
 
 
 

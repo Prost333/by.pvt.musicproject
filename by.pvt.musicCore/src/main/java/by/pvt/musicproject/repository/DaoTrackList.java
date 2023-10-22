@@ -1,4 +1,4 @@
-package by.pvt.musicproject.repository.dao;
+package by.pvt.musicproject.repository;
 
 import by.pvt.musicproject.entity.Album;
 import by.pvt.musicproject.entity.Performer;
@@ -15,5 +15,4 @@ public interface DaoTrackList extends JpaRepository<Track,Long>  {
     List<Track> findByAlbums(Album album);
     List<Track> findByName(String name);
 
-//    List<String> findAllByFile();
 }

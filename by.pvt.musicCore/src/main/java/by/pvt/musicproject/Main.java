@@ -20,7 +20,7 @@ public class Main {
     public static void main(String[] args) {
 //        ApplicationContext applicationContext= new AnnotationConfigApplicationContext(SpringConfig.class);
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(HibernateConfiguration.class);
-        TrackListServiceImp trackListServiceImp=applicationContext.getBean(TrackListServiceImp.class);
+        TrackListServiceImp trackListServiceImp = applicationContext.getBean(TrackListServiceImp.class);
 //        TrackListService trackListService =applicationContext.getBean("trackListService",TrackListServiceImp.class);
 //        System.out.println(trackListService.getAllList());
 //        RecordPlayer recordPlayer =new RecordPlayer();
@@ -31,9 +31,9 @@ public class Main {
 //        rating.setMark(9L);
 //        ratingService.add(rating);
 //        System.out.println(ratingService.findRatingById(1L));
-        var albumService= applicationContext.getBean(AlbumServiceImp.class);
-        var performerService= applicationContext.getBean(PerformerServiceImp.class);
-        albumService.addTrackToAlbum(1L, trackListServiceImp.findTrackById(1L));
+        var albumService = applicationContext.getBean(AlbumServiceImp.class);
+        var performerService = applicationContext.getBean(PerformerServiceImp.class);
+        System.out.println(trackListServiceImp.findAllByFile());
 
 //        Performer performer=new Performer();
 //        performer.setName("The Doors");
@@ -44,7 +44,6 @@ public class Main {
 //        album.setPerformer(performer);
 //        albumService.add(album);
 //        System.out.println(albumService.findByName("L.A. Woman"));
-
 
 
 
@@ -83,7 +82,7 @@ public class Main {
 //        System.out.println(trackListService.getTrackByStyle("rock"));
 //        myPlayListService.findTrackByName("The-Doors-People-Are-Strange.wav",1L);
 
-UserServiceImp userService =applicationContext.getBean(UserServiceImp.class);
+        UserServiceImp userService = applicationContext.getBean(UserServiceImp.class);
 //userService.addTrackToUser(1L,trackListServiceImp.findTrackById(2L));
 //        User user = new User();
 //        user.setName("Alina");

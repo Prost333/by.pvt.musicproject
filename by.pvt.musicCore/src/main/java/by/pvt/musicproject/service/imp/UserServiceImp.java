@@ -1,11 +1,8 @@
 package by.pvt.musicproject.service.imp;
 
-import by.pvt.musicproject.dto.UserRequest;
-import by.pvt.musicproject.entity.Rating;
 import by.pvt.musicproject.entity.Track;
 import by.pvt.musicproject.entity.User;
-import by.pvt.musicproject.repository.dao.DaoUser;
-import by.pvt.musicproject.service.UserService;
+import by.pvt.musicproject.repository.DaoUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
