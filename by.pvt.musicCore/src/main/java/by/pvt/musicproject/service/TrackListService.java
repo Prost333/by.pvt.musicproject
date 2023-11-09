@@ -1,33 +1,35 @@
 package by.pvt.musicproject.service;
 
+import by.pvt.musicproject.dto.TrackReq;
+import by.pvt.musicproject.dto.TrackRes;
+import by.pvt.musicproject.entity.Album;
+import by.pvt.musicproject.entity.Performer;
 import by.pvt.musicproject.entity.Track;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TrackListService {
-    Track add(Track track);
+    TrackRes add(TrackReq track);
 
     Track findTrackById(Long id);
 
-    void deleteTrackList(Track track);
+    void delete(Long id);
 
-    List<Track> getAllList();
+    List<TrackRes> getAllList();
 
-    List<Track> getTrackByStyle(String style);
+    List<TrackRes> findByStyle(String style);
 
-    List<Track> findAllByPerformer(Long performer);
+    List<TrackRes> findByPerformer(Performer performer);
 
-    List<Track> findAllByAlbums(Long album);
+    List<TrackRes> findByAlbums(Album album);
 
-    List<Track> findByName(String name);
+    List<TrackRes> findByName(String name);
 
-    void updateTrack(Track track);
-
-    List<Track> findTrackByPerformer(Long id);
-
-    List<Track> findUserPlayList(Long id);
-
-    List<String> getAllFile();
+    List<String> findAllByFile();
+    TrackRes findTrackByIdRes(Long id);
+    Page<Track> getAllTrackPage(int page, int size);
 
 
 }

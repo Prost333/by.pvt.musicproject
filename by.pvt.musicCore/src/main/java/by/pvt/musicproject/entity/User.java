@@ -27,8 +27,8 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToOne
-    @JoinColumn(name = "subscription", insertable = false,updatable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "subscription", insertable = true,updatable = true)
     private Subscription subscription;
     @Column(name = "role")
     private String role;

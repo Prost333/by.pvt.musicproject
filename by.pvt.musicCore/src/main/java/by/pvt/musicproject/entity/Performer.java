@@ -20,11 +20,11 @@ public class Performer {
     private Long id;
     private String name;
     private String closenes;
-    @OneToMany(mappedBy = "performer", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "performer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Album> album;
-    @OneToMany(mappedBy = "performer", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "performer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Track> track;

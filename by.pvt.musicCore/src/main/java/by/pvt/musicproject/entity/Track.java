@@ -19,12 +19,10 @@ public class Track {
     private String style;
     private String lenght;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "albums")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Album albums;
     @ManyToOne
-    @JoinColumn(name = "performers_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Performer performer;
@@ -33,10 +31,5 @@ public class Track {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<User> user;
-//    @ManyToMany(mappedBy = "track")
-//    @ToString.Exclude
-//    @EqualsAndHashCode.Exclude
-//    private List<Rating> rating;
-
 
 }

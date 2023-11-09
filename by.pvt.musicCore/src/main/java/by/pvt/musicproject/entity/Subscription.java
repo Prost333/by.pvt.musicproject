@@ -1,9 +1,6 @@
 package by.pvt.musicproject.entity;
 
 
-import lombok.Data;
-
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,11 +19,14 @@ public class Subscription {
     @SequenceGenerator(name = "seq_subscription", sequenceName = "subscription_seq", allocationSize = 1, schema = "music")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_subscription")
     private Long id;
+    @Column(name="start_data")
     private LocalDateTime startData;
+    @Column(name="end_data")
     private LocalDateTime endData;
-    private Long user_id;
+    @Column(name="user_id")
+    private Long userId;
     private BigDecimal subsPrice;
-    @OneToOne
+    @OneToOne(mappedBy = "subscription", cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
