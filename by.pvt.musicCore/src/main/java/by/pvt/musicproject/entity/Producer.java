@@ -1,15 +1,12 @@
 package by.pvt.musicproject.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
-@Data
 @Entity
-@NoArgsConstructor
+@Getter
+@Setter
 @ToString
 @Table(schema = "music", name = "producer")
 @PrimaryKeyJoinColumn (name = "p_id")

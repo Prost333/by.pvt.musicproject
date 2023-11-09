@@ -1,19 +1,16 @@
 package by.pvt.musicproject.dto;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
-@Entity
-@NoArgsConstructor
 public class AlbumsReq {
     private Long id;
+    @NotBlank(message = "поле name должно не быть пустым")
     private String name;
     private String style;
-    private LocalDate Relese;
+    @NotBlank(message = "поле relese должно не быть пустым")
+    private LocalDate relese;
 }
