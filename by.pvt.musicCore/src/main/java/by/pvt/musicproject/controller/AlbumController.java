@@ -2,6 +2,7 @@ package by.pvt.musicproject.controller;
 
 import by.pvt.musicproject.dto.AlbumsReq;
 import by.pvt.musicproject.dto.AlbumsRes;
+import by.pvt.musicproject.dto.TrackRes;
 import by.pvt.musicproject.entity.Album;
 import by.pvt.musicproject.entity.Track;
 import by.pvt.musicproject.mapper.AlbumMapper;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,15 +46,13 @@ public class AlbumController {
         albumService.deleteAlbum(id);
     }
     @PostMapping("/addTrack")
-    public String addAlbumToPerformer(@RequestParam("trackId") Long trackId, @RequestParam("albumId") Long albumId) {
-        Track track=trackListService.findTrackById(trackId);
-       albumService.addTrackToAlbum(albumId,track);
-        return "added " + track.getName() + " to album";
+    public Map<AlbumsRes, List<TrackRes>> addTrackToAlbum(@RequestParam("trackId") Long trackId, @RequestParam("albumId") Long albumId) {
+       return albumService.addTrackToAlbum(albumId,trackId);
     }
 
     @GetMapping("/name")
     public List<AlbumsRes> findByName(@RequestParam String name){
-        return albumService.findByName(name).stream().map(album -> albumMapper.toResponse(album)).collect(Collectors.toList());
+        return albumService.findByName(name);
     }
     @GetMapping("/page")
     public Page<AlbumsRes> getPerformers(@RequestParam int page, @RequestParam int size) {

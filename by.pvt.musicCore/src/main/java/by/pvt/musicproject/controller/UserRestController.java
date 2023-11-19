@@ -1,5 +1,7 @@
 package by.pvt.musicproject.controller;
 
+import by.pvt.musicproject.aop.verification.ControlSessionUserBySubscription;
+import by.pvt.musicproject.dto.TrackRes;
 import by.pvt.musicproject.dto.UserRequest;
 import by.pvt.musicproject.dto.UserResponse;
 import by.pvt.musicproject.entity.Track;
@@ -7,23 +9,28 @@ import by.pvt.musicproject.entity.User;
 import by.pvt.musicproject.mapper.UserMapper;
 import by.pvt.musicproject.service.TrackListService;
 import by.pvt.musicproject.service.UserService;
+import jakarta.servlet.ServletException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("user")
+@RequiredArgsConstructor
 public class UserRestController {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private TrackListService trackListService;
 
+    private final UserService userService;
+
+    private final UserMapper userMapper;
+
+    private final TrackListService trackListService;
+
+    private Authentication authentication;
 
     @GetMapping("/getAll")
     public List<UserResponse> findAllUsers() {
@@ -35,8 +42,8 @@ public class UserRestController {
         userService.deleteUser(id);
     }
 
-    @PostMapping
-    public UserResponse addUser(@RequestBody @Validated UserRequest userRequest) {
+    @PostMapping("/addUser")
+    public UserResponse addUser(@RequestBody @Validated UserRequest userRequest) throws Exception {
         return userService.add(userRequest);
     }
 
@@ -45,24 +52,42 @@ public class UserRestController {
         return userService.findUserById(id);
     }
 
+
     @GetMapping("/file")
-    public List<String> getTrackByUser(@RequestParam("id") Long id) {
-        return userService.getAllTrackByUser(id);
+    public List<TrackRes> getTrackByUser() {
+        authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return userService.getAllTrackByUser(user.getId());
     }
-    @PostMapping("/create")
-    public User createSubscriptionByUser(@RequestParam("userId") Long userId, @RequestParam("day") int day) {
+
+    @GetMapping("/create")
+    public UserResponse createSubscriptionByUser(@RequestParam("userId") Long userId, @RequestParam("day") int day) {
         return userService.createSubscriptionByUser(userId, day);
     }
-    @PostMapping("/addTrack")
-    public String addTrackToUserPlaylist(@RequestParam("userId") Long userId,@RequestParam("trackId") Long trackId){
-        Track track= trackListService.findTrackById(trackId);
-        userService.addTrackToUser(userId,track);
-        return "added "+track.getName()+" to library";
+
+
+    @GetMapping("/addTrack")
+    @ControlSessionUserBySubscription
+    public String addTrackToUserPlaylist(@RequestParam("trackId") Long trackId) {
+        Track track = trackListService.findTrackById(trackId);
+        User user=(User) authentication.getPrincipal();
+        userService.addTrackToUser(user.getId(), track);
+        return "added " + track.getName() + " to library";
     }
 
     @PostMapping("/deleteTrack")
-    public void deleteTrackByUser(@RequestParam("userId") Long userId,@RequestParam("trackId") Long trackId){
-        userService.deleteTracks(userId,trackId);
+    public void deleteTrackByUser(@RequestParam("userId") Long userId, @RequestParam("trackId") Long trackId) {
+        userService.deleteTracks(userId, trackId);
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public UserResponse login(@RequestBody UserRequest userRequest) throws ServletException {
+        return userService.login(userRequest);
+    }
+
+    @GetMapping("/logout")
+    public void logout() throws ServletException {
+        userService.logout();
     }
 
 }

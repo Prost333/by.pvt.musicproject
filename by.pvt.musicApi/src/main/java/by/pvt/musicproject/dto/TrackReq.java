@@ -16,9 +16,8 @@ public class TrackReq {
     @NotBlank(message = "поле lenght должно не быть пустым")
     private String lenght;
 
-    private Long id_albom;
-
-    private Long id_performers;
+    private String album;
+    private String performer1;
     @NotBlank(message = "поле file должно не быть пустым")
     private  String file;
 }

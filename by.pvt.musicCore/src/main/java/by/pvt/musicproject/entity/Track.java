@@ -31,5 +31,7 @@ public class Track {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<User> user;
+    @OneToMany(mappedBy = "track")
+    private List<Rating> ratings;
 
 }

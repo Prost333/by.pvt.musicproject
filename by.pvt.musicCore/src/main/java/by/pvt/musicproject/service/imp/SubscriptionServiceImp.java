@@ -6,8 +6,10 @@ import by.pvt.musicproject.entity.Subscription;
 import by.pvt.musicproject.entity.User;
 import by.pvt.musicproject.mapper.SubscriptionMapper;
 import by.pvt.musicproject.repository.DaoSubscription;
+import by.pvt.musicproject.service.AmountService;
 import by.pvt.musicproject.service.SubscriptionService;
 import by.pvt.musicproject.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +24,13 @@ import java.util.Optional;
 import static java.time.LocalDateTime.now;
 
 @Service
+@RequiredArgsConstructor
 public class SubscriptionServiceImp implements SubscriptionService {
-    @Autowired
-    public DaoSubscription daoSubscription;
-    @Autowired
-    public SubscriptionMapper subscriptionMapper;
+
+    public final DaoSubscription daoSubscription;
+
+    public final SubscriptionMapper subscriptionMapper;
+    public final AmountService amountService;
 
 
     public void add(Subscription subscription) {
@@ -64,19 +68,23 @@ public class SubscriptionServiceImp implements SubscriptionService {
         }
     }
 
-    public Subscription defaultSubscription() {
+    public Subscription defaultSubscription(User user) {
         String date = "1998-01-16 13:18";
         LocalDateTime time = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         Subscription subscription = new Subscription();
-        subscription.setStartData(time);
+        subscription.setStartData(now());
         subscription.setEndData(time);
+        subscription.setUser(user);
+        subscription.setUserId(user.getId());
         daoSubscription.save(subscription);
         return subscription;
     }
 
     public Subscription subByProducer(Producer producer){
-        Subscription subscription=defaultSubscription();
+        Subscription subscription=defaultSubscription(producer);
         subscription.setEndData(LocalDateTime.now().plus(2,ChronoUnit.YEARS));
+        subscription.setSubsPrice(BigDecimal.valueOf(amountService.findAll().get(0).getAmountByProducer()));
+        subscription.setUserId(producer.getId());
         producer.setSubscription(subscription);
         daoSubscription.save(subscription);
         return subscription;

@@ -1,5 +1,7 @@
 package by.pvt.musicproject.entity;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -17,11 +19,15 @@ public class Rating {
     @Column(name = "id")
     private Long id;
     @Column(name = "mark")
+    @Min(0)
+    @Max(5)
     private Long mark;
     @Column(name = "track_id")
     private Long trackId;
     @Column(name = "userid")
     private Long userid;
-
+    @ManyToOne
+    @JoinColumn(name="trackNumber")
+    private Track track;
 
 }

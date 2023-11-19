@@ -1,89 +1,124 @@
 package by.pvt.musicproject.music;
 
+import javazoom.jl.decoder.Bitstream;
+import javazoom.jl.decoder.Header;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+import org.springframework.stereotype.Service;
+
+
 import javax.sound.sampled.*;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-
+@Service
 public class RecordPlayer {
-    private AtomicBoolean stop = new AtomicBoolean(false);
+    private Player player;
+    private FileInputStream fileInputStream;
+    private BufferedInputStream bis;
+    private long pauseLocation;
+    private long songTotalLength;
+    private volatile boolean playbackAllowed;
 
+    public double getDuration(String filePath) throws Exception {
 
-    public void Playlist(List<String> file) {
-        new Thread(() -> {
-            try {
-                for (String s : file) {
-                    if (stop.get()) break;
-                    File audioFile = new File("C:\\musikdb\\wav\\" + s);
-                    AudioInputStream ais = AudioSystem.getAudioInputStream(audioFile);
-                    Clip clip = AudioSystem.getClip();
-                    clip.open(ais);
-                    clip.setFramePosition(0);
-                    clip.start();
-
-                    while (!clip.isRunning()) {
-                        Thread.sleep(10);
-                    }
-
-                    while (clip.isRunning()) {
-                        Thread.sleep(10);
-                    }
-
-                    clip.close();
-                }
-            } catch (Exception exc) {
-                exc.printStackTrace();
-            }
-        }).start();
+        try (FileInputStream stream = new FileInputStream("C:\\musikdb\\wav\\" +filePath)) {
+            Bitstream bitstream = new Bitstream(stream);
+            Header h = bitstream.readFrame();
+            int size = h.calculate_framesize();
+            float ms_per_frame = h.ms_per_frame();
+            long bytes = stream.available();
+            float framecount = bytes / size;
+            float durationInSeconds = framecount * ms_per_frame / 1000.0f;
+            return durationInSeconds;
+        }
+        catch (Exception e) {
+            throw e;
+        }
     }
-    public boolean stopPlaying() {
-        return  true;
+    public void next() {
+        if (player != null) {
+            player.close();
+            pauseLocation = 0;
+            songTotalLength = 0;
+        }
     }
 
-    public void playlist(List<String> file) {
-        AtomicBoolean stop = new AtomicBoolean(false);
+    public void stop() {
+        playbackAllowed = false;
+        if (player != null) {
+            player.close();
+            pauseLocation = 0;
+            songTotalLength = 0;
+        }
+    }
 
-        Thread thread = new Thread(() -> {
+    public void pause() {
+        playbackAllowed = false;
+        if (player != null && fileInputStream != null) {
             try {
-                for (String s : file) {
-                    if (stop.get()) {
-                        break;
-                    }
-
-                    File audioFile = new File("C:\\musikdb\\wav\\" + s);
-                    AudioInputStream ais = AudioSystem.getAudioInputStream(audioFile);
-                    Clip clip = AudioSystem.getClip();
-                    clip.open(ais);
-                    clip.setFramePosition(0);
-                    clip.start();
-
-                    while (!clip.isRunning()) {
-                        Thread.sleep(10);
-                    }
-
-                    while (clip.isRunning()) {
-                        Thread.sleep(10);
-                    }
-
-                    clip.close();
-                }
-            } catch (Exception exc) {
-                exc.printStackTrace();
-            }
-        });
-
-        thread.start();
-        new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-                stop.set(true);
-            } catch (InterruptedException e) {
+                pauseLocation = fileInputStream.available();
+                player.close();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void playList(List<String> files) {
+        playbackAllowed = true;
+        new Thread(() -> {
+            for (String filePath : files) {
+                if (!playbackAllowed) break;
+                try {
+                    fileInputStream = new FileInputStream("C:\\musikdb\\wav\\" + filePath);
+                    bis = new BufferedInputStream(fileInputStream);
+                    songTotalLength = bis.available();
+                    player = new Player(bis);
+                    player.play();
+                } catch (JavaLayerException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }).start();
     }
 
+    public void singlePlay(String filePath) {
+        if (player == null) {
+            try {
+                fileInputStream = new FileInputStream("C:\\musikdb\\wav\\" + filePath);
+                bis = new BufferedInputStream(fileInputStream);
+                player = new Player(bis);
 
+                bis.skip(songTotalLength - pauseLocation);
+            } catch (JavaLayerException | IOException e) {
+                e.printStackTrace();
+            }
+
+            new Thread(() -> {
+                try {
+                    player.play();
+                } catch (JavaLayerException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+    }
+
+//    public void resume() {
+//        if (player != null) {
+//            try {
+//                fileInputStream = new FileInputStream("C:\\musikdb\\wav\\" + filePath);
+//                bis = new BufferedInputStream(fileInputStream);
+//                bis.skip(songTotalLength - pauseLocation);
+//                player = new Player(bis);
+//                player.play();
+//            } catch (FileNotFoundException | JavaLayerException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }

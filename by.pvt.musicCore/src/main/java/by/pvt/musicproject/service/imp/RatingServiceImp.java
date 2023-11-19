@@ -9,13 +9,14 @@ import by.pvt.musicproject.service.RatingService;
 import by.pvt.musicproject.service.TrackListService;
 import by.pvt.musicproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.time.LocalDateTime.now;
 
 @Service
 public class RatingServiceImp implements RatingService {
@@ -27,17 +28,18 @@ public class RatingServiceImp implements RatingService {
     private UserService userService;
     @Autowired
     private TrackListService trackListService;
-
+    @Transactional
     public RatingRes create(Long mark, Long trackId, Long userId) {
         if (findByTrackIdAndUserid(trackId, userId).isEmpty()) {
             Rating rating = new Rating();
             rating.setMark(mark);
             rating.setUserid(userId);
             rating.setTrackId(trackId);
+            rating.setTrack(trackListService.findTrackById(trackId));
             daoRating.save(rating);
             return ratingMapper.toResponse(rating);
-        }else{
-            Rating rating =findByTrackIdAndUserid(trackId, userId).get(0);
+        } else {
+            Rating rating = findByTrackIdAndUserid(trackId, userId).get(0);
             rating.setMark(mark);
             daoRating.save(rating);
             return ratingMapper.toResponse(rating);
@@ -56,7 +58,13 @@ public class RatingServiceImp implements RatingService {
 
     @Override
     public List<Rating> findByTrackIdAndUserid(Long trackId, Long userId) {
+
         return daoRating.findByTrackIdAndUserid(trackId, userId);
+    }
+
+    @Override
+    public List<Object[]> findTrackWithHighestAverageMark() {
+        return daoRating.findTrackWithHighestAverageMark();
     }
 
 
@@ -81,4 +89,20 @@ public class RatingServiceImp implements RatingService {
     public List<RatingRes> getAllRating() {
         return daoRating.findAll().stream().map(rating -> ratingMapper.toResponse(rating)).collect(Collectors.toList());
     }
+
+    public List<Object[]> findTrackWithHighestAverageMark(Pageable pageable) {
+        List<Object[]> results = daoRating.findTrackWithHighestAverageMark(pageable);
+        return results;
+    }
+
+    @Override
+    public List<Object[]> findAlbumWithTrackHavingMostRatings(Pageable pageable) {
+        return daoRating.findAlbumWithTrackHavingMostRatings(pageable);
+    }
+
+    @Override
+    public List<Object[]> findTrackWithRatingCountAndAverageMark() {
+        return daoRating.findTrackWithRatingCountAndAverageMark();
+    }
+
 }

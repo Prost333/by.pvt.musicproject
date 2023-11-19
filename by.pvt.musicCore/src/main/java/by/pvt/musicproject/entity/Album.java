@@ -16,6 +16,7 @@ public class Album {
     @SequenceGenerator(name = "seq_album", sequenceName = "album_seq", allocationSize = 1, schema = "music")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_album")
     private Long id;
+    @Column(name = "name",unique = true)
     private String name;
     private String style;
     private LocalDate Relese;
@@ -25,7 +26,7 @@ public class Album {
     @EqualsAndHashCode.Exclude
     private Performer performer;
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name= "track")
+//    @JoinColumn(name= "track")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Track> track;

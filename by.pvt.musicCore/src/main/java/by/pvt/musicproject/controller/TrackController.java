@@ -1,38 +1,41 @@
 package by.pvt.musicproject.controller;
 
+import by.pvt.musicproject.aop.verification.ControlSessionUserBySubscription;
 import by.pvt.musicproject.dto.*;
 import by.pvt.musicproject.entity.Album;
 import by.pvt.musicproject.entity.Performer;
 import by.pvt.musicproject.entity.Track;
 import by.pvt.musicproject.mapper.TrackMapper;
+import by.pvt.musicproject.music.AdapterSend;
 import by.pvt.musicproject.music.RecordPlayer;
 import by.pvt.musicproject.service.AlbumService;
 import by.pvt.musicproject.service.PerformerService;
 import by.pvt.musicproject.service.TrackListService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("track")
+@RequiredArgsConstructor
 public class TrackController {
-    @Autowired
-    private TrackListService trackListService;
-    @Autowired
-    private TrackMapper trackMapper;
-    @Autowired
-    private AlbumService albumService;
-    @Autowired
-    private PerformerService performerService;
-    private RecordPlayer recordPlayer = new RecordPlayer();
+
+    private final TrackListService trackListService;
+    private final TrackMapper trackMapper;
+
+    private final AlbumService albumService;
+
+    private final PerformerService performerService;
+    private final RecordPlayer recordPlayer;
+    private  final AdapterSend adapterSend;
 
     @PostMapping("/add")
     public TrackRes add(@RequestBody TrackReq trackReq) {
-        return trackListService.add(trackReq);
+        return adapterSend.addTrack(trackReq);
     }
 
     @GetMapping("/getAll")
@@ -62,7 +65,7 @@ public class TrackController {
 
     @GetMapping("/album")
     public List<TrackRes> findByAlbum(@RequestParam String album) {
-        Album album1 = albumService.findByName(album).get(0);
+        Album album1 = albumService.findEntityByName(album).get(0);
         return trackListService.findByAlbums(album1);
     }
 
@@ -80,17 +83,45 @@ public class TrackController {
     @GetMapping("/page")
     public Page<TrackRes> getTracks(@RequestParam int page, @RequestParam int size) {
         Page<Track> tracks = trackListService.getAllTrackPage(page, size);
-        return tracks.map(track -> trackMapper.toResponse(track));
+        return tracks.map(trackMapper::toResponse);
     }
 
+    @SneakyThrows
+    @ControlSessionUserBySubscription
     @GetMapping("/start")
-    public void start(@RequestParam Long trackId) {
-        recordPlayer.playlist(Collections.singletonList(trackListService.findTrackById(trackId).getFile()));
+    public TrackRes start(@RequestParam Long trackId) {
+        recordPlayer.playList(Collections.singletonList(trackListService.findTrackById(trackId).getFile()));
+        return trackListService.findTrackByIdRes(trackId);
     }
-    @GetMapping ("/stop")
+
+    @GetMapping("/userList")
+    @ControlSessionUserBySubscription
+    public List<TrackRes> playUserList(@RequestParam Long id) {
+        return trackListService.playTrackByUserPlaylist(id);
+    }
+
+
+    @PostMapping("/startByPerformerName")
+    @ControlSessionUserBySubscription
+    public List<TrackRes> startByPerformerName(@RequestBody PerformersReq performersReq) {
+        trackListService.findTracksByPerformerName(performersReq.getName());
+        return trackListService.findByPerformer(performerService.findPerformerEntityByName(performersReq.getName()).get(0));
+    }
+
+    @GetMapping("/stop")
     public String stop() {
-       recordPlayer.stopPlaying();
-       return "stop track";
+        recordPlayer.stop();
+        return "stop track";
+    }
+
+    @GetMapping("/pause")
+    public void pause() {
+        recordPlayer.pause();
+    }
+
+    @GetMapping("/next")
+    public void next() {
+        recordPlayer.next();
     }
 
 

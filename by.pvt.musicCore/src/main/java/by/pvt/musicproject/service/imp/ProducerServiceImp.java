@@ -28,16 +28,16 @@ public class ProducerServiceImp implements ProducerService {
     private UserService userService;
 
 
-
     public ProducerResponse add(ProducerRequest producerRequest) {
-        Producer producer= producerMapping.toEntity(producerRequest);
+        Producer producer = producerMapping.toEntity(producerRequest);
         producer.setSubscription(subscriptionService.subByProducer(producer));
+        producer.setRole("ADMIN");
         dao.save(producer);
         return producerMapping.toResponse(producer);
     }
 
     public ProducerResponse findProducerById(Long id) {
-        Producer user = dao.findById(id).orElseThrow(()-> new EntityNotFoundException("user not found"));
+        Producer user = dao.findById(id).orElseThrow(() -> new EntityNotFoundException("user not found"));
         return producerMapping.toResponse(user);
     }
 
@@ -47,6 +47,6 @@ public class ProducerServiceImp implements ProducerService {
 
 
     public List<ProducerResponse> getAllProducer() {
-        return dao.findAll().stream().map(producer ->producerMapping.toResponse(producer)).collect(Collectors.toList());
+        return dao.findAll().stream().map(producer -> producerMapping.toResponse(producer)).collect(Collectors.toList());
     }
 }

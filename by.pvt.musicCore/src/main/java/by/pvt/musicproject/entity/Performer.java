@@ -18,6 +18,7 @@ public class Performer {
     @SequenceGenerator(name = "seq_performer", sequenceName = "performer_seq", allocationSize = 1, schema = "music")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_performer")
     private Long id;
+    @Column(name = "name",unique = true)
     private String name;
     private String closenes;
     @OneToMany(mappedBy = "performer", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)

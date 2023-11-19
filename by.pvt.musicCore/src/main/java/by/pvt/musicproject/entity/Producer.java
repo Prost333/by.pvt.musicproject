@@ -14,5 +14,7 @@ import jakarta.persistence.*;
 public class Producer extends  User {
     private  String company;
     private  Long salary;
+    @Column(name = "label",unique = true)
+    private  Long label;
 
 }

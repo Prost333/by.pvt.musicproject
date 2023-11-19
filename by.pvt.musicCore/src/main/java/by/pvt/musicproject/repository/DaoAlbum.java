@@ -1,6 +1,7 @@
 package by.pvt.musicproject.repository;
 
 import by.pvt.musicproject.entity.Album;
+import by.pvt.musicproject.entity.Performer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,5 @@ public interface DaoAlbum extends JpaRepository<Album, Long> {
     Page<Album> findAllOrderById(Pageable pageable);
 
     List<Album> findByName(String name);
+    List<Album> findByPerformer(Performer performer);
 }

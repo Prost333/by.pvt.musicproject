@@ -1,46 +1,83 @@
 package by.pvt.musicproject.service.imp;
 
+import by.pvt.musicproject.aop.verification.CheckSubscription;
+import by.pvt.musicproject.dto.TrackRes;
 import by.pvt.musicproject.dto.UserRequest;
 import by.pvt.musicproject.dto.UserResponse;
 import by.pvt.musicproject.entity.Subscription;
 import by.pvt.musicproject.entity.Track;
 import by.pvt.musicproject.entity.User;
 import by.pvt.musicproject.exception.EntityNotFoundException;
+import by.pvt.musicproject.mapper.TrackMapper;
 import by.pvt.musicproject.mapper.UserMapper;
 import by.pvt.musicproject.repository.DaoUser;
+import by.pvt.musicproject.service.AmountService;
 import by.pvt.musicproject.service.SubscriptionService;
 import by.pvt.musicproject.service.UserService;
-import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.*;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImp implements UserService {
-    @Autowired
-    private DaoUser dao;
 
-    @Autowired
-    private SubscriptionService subscriptionService;
+    private final DaoUser dao;
 
-    UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+    private final SubscriptionService subscriptionService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final UserMapper userMapper;
+    private final TrackMapper trackMapper;
+
+    private final HttpServletRequest httpServletRequest;
+    public final AmountService amountService;
 
 
-    public UserResponse add(UserRequest userRequest) {
+    public UserResponse login(UserRequest userRequest) throws ServletException {
+        try {
+            if (userRequest.getLogin() == null || userRequest.getLogin().isEmpty() ||
+                    userRequest.getPassword() == null || userRequest.getPassword().isEmpty()) {
+                throw new IllegalArgumentException("Login and password must not be empty");
+            }
+            httpServletRequest.login(userRequest.getLogin(), userRequest.getPassword());
+            User user = dao.findByLogin(userRequest.getLogin());
+            return userMapper.toResponse(user);
+        } catch (ServletException e) {
+            throw new RuntimeException("Login failed", e);
+        }
+    }
+
+    public void logout() throws ServletException {
+        httpServletRequest.logout();
+    }
+
+
+    @Transactional
+    public UserResponse add(UserRequest userRequest) throws Exception {
         User user = userMapper.toEntity(userRequest);
-        user.setSubscription(subscriptionService.defaultSubscription());
+        user.setRole("user");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         dao.save(user);
-        return userMapper.userToUserResponse(user);
-
+        user.setSubscription(subscriptionService.defaultSubscription(user));
+        dao.save(user);
+        return userMapper.toResponse(user);
     }
 
 
@@ -49,12 +86,22 @@ public class UserServiceImp implements UserService {
         return user;
     }
 
-    public UserResponse findUserById(Long id) {
-        User user =dao.findById(id).orElseThrow(()-> new EntityNotFoundException("user not found"));
-        return userMapper.userToUserResponse(user);
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var user = dao.findByLogin(username);
+        return user;
     }
 
+    public UserResponse findUserById(Long id) {
+        User user = dao.findById(id).orElseThrow(() -> new EntityNotFoundException("user not found"));
+        return userMapper.toResponse(user);
+    }
+
+    @Transactional
     public void deleteUser(Long id) {
+        User user = findEntitybyId(id);
+        Subscription subscription = subscriptionService.findSubscriptionById(user.getSubscription().getId());
+        subscriptionService.deleteSubscription(subscription);
         dao.deleteById(id);
     }
 
@@ -62,42 +109,33 @@ public class UserServiceImp implements UserService {
         return dao.findAll();
     }
 
+    @CheckSubscription
     public void addTrackToUser(Long userId, Track track) {
         User user = dao.findById(userId).orElse(null);
-        if (user.getSubscription().getEndData().isAfter(now())) {
-            if (user != null && !user.getTrack().contains(track)) {
-                user.getTrack().add(track);
-                dao.save(user);
-            }
-        } else {
-            System.out.println("adding music is possible after connecting the subscription");
+        if (user != null && !user.getTrack().contains(track)) {
+            user.getTrack().add(track);
+            dao.save(user);
         }
     }
 
-    public User createSubscriptionByUser(Long userId, int day) {
+    public UserResponse createSubscriptionByUser(Long userId, int day) {
         User user = findEntitybyId(userId);
         Subscription subscription = subscriptionService.findSubscriptionById(user.getSubscription().getId());
-        int payForDay = 5;
         subscription.setUserId(user.getId());
         subscription.setUser(user);
-        subscription.setSubsPrice(new BigDecimal(payForDay * day));
+        BigDecimal a = BigDecimal.valueOf(amountService.getAmount() * day);
+        subscription.setSubsPrice(a);
         subscription.setStartData(now());
         subscription.setEndData(now().plus(day, ChronoUnit.DAYS));
         user.setSubscription(subscription);
-        return dao.save(user);
+        return userMapper.toResponse(dao.save(user));
     }
 
-    public List<String> getAllTrackByUser(Long id) {
+    @CheckSubscription
+    public List<TrackRes> getAllTrackByUser(Long id) {
         User user = dao.findById(id).orElseThrow(() -> new EntityNotFoundException("user not found"));
-        Subscription subscription = subscriptionService.findSubscriptionById(user.getSubscription().getId());
-        if (subscription.getEndData().isAfter(now())) {
-            List<Track> tracks = user.getTrack();
-            List<String> file = tracks.stream().map(Track::getFile).collect(Collectors.toList());
-            return file;
-        } else {
-            subscriptionService.calculateTimeDifference(user.getSubscription().getEndData());
-            return Collections.singletonList("none");
-        }
+        List<Track> tracks = user.getTrack();
+        return tracks.stream().map(trackMapper::toResponse).collect(Collectors.toList());
 
     }
 
@@ -113,7 +151,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public List<UserResponse> getAllUserRes() {
-        List<UserResponse> userResponses = dao.findAll().stream().map(user -> userMapper.userToUserResponse(user)).toList();
+        List<UserResponse> userResponses = dao.findAll().stream().map(userMapper::toResponse).toList();
         return userResponses;
     }
 

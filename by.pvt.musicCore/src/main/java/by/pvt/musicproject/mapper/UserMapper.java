@@ -5,14 +5,13 @@ import by.pvt.musicproject.dto.UserResponse;
 import by.pvt.musicproject.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-
-
-    UserResponse userToUserResponse(User user);
+    @Mapping(target="password", ignore=true)
+    @Mapping(target="id", ignore=true)
+    UserResponse toResponse(User user);
 
     User toEntity(UserRequest userRequest);
 }

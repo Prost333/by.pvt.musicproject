@@ -21,7 +21,7 @@ public interface SubscriptionService {
 
     void calculateTimeDifference(LocalDateTime end);
 
-    Subscription defaultSubscription();
+    Subscription defaultSubscription(User user);
 
     Subscription subByProducer(Producer producer);
 

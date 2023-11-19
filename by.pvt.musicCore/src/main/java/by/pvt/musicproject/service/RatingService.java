@@ -3,6 +3,7 @@ package by.pvt.musicproject.service;
 import by.pvt.musicproject.dto.RatingReq;
 import by.pvt.musicproject.dto.RatingRes;
 import by.pvt.musicproject.entity.Rating;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,4 +19,8 @@ public interface RatingService {
     List<Rating> findByUserId(Long userId);
     List<Rating> findByTrackId(Long trackId);
     List<Rating> findByTrackIdAndUserid(Long trackId, Long userid);
+    List<Object[]> findTrackWithHighestAverageMark();
+    List<Object[]> findTrackWithHighestAverageMark(Pageable pageable);
+    List<Object[]> findAlbumWithTrackHavingMostRatings(Pageable pageable);
+    List<Object[]> findTrackWithRatingCountAndAverageMark();
 }

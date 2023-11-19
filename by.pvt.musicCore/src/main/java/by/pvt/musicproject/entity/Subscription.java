@@ -26,7 +26,7 @@ public class Subscription {
     @Column(name="user_id")
     private Long userId;
     private BigDecimal subsPrice;
-    @OneToOne(mappedBy = "subscription", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
