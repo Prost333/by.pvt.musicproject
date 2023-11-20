@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/album/**").authenticated()
                 .requestMatchers("/album/**").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.DELETE,"/track/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST,"/track/startByPerformerName").authenticated()
                 .requestMatchers(HttpMethod.POST,"/track/**").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/track/**").authenticated()
                 .requestMatchers(HttpMethod.GET,"/rating/**").permitAll()

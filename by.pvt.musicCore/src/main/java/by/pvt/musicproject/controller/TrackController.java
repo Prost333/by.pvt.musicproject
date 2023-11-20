@@ -5,6 +5,7 @@ import by.pvt.musicproject.dto.*;
 import by.pvt.musicproject.entity.Album;
 import by.pvt.musicproject.entity.Performer;
 import by.pvt.musicproject.entity.Track;
+import by.pvt.musicproject.entity.User;
 import by.pvt.musicproject.mapper.TrackMapper;
 import by.pvt.musicproject.music.AdapterSend;
 import by.pvt.musicproject.music.RecordPlayer;
@@ -14,10 +15,12 @@ import by.pvt.musicproject.service.TrackListService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("track")
@@ -26,12 +29,11 @@ public class TrackController {
 
     private final TrackListService trackListService;
     private final TrackMapper trackMapper;
-
     private final AlbumService albumService;
-
     private final PerformerService performerService;
     private final RecordPlayer recordPlayer;
     private  final AdapterSend adapterSend;
+    private Authentication authentication;
 
     @PostMapping("/add")
     public TrackRes add(@RequestBody TrackReq trackReq) {
@@ -92,6 +94,18 @@ public class TrackController {
     public TrackRes start(@RequestParam Long trackId) {
         recordPlayer.playList(Collections.singletonList(trackListService.findTrackById(trackId).getFile()));
         return trackListService.findTrackByIdRes(trackId);
+    }
+    @GetMapping("/myPlayList")
+    @ControlSessionUserBySubscription
+    public List<TrackRes> myPlayList(Authentication authentication) {
+        User user=(User) authentication.getPrincipal();
+        return trackListService.playTrackByUserPlaylist(user.getId());
+    }
+    @GetMapping("/addTrack")
+    @ControlSessionUserBySubscription
+    public Map<UserResponse, List<TrackRes>> addTrackToUserPlaylist(@RequestParam("trackId") Long trackId, Authentication authentication) {
+        User user=(User) authentication.getPrincipal();
+        return  trackListService.addTrackToUser(user.getId(), trackId);
     }
 
     @GetMapping("/userList")

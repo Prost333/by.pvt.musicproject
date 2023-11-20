@@ -31,7 +31,7 @@ public interface DaoRating extends JpaRepository<Rating, Long> {
     @Query("SELECT a.name, t.name, COUNT(r) as count " +
             "FROM Album a JOIN a.track t JOIN t.ratings r " +
             "GROUP BY a.name, t.name " +
-            "ORDER BY count DESC")
+            "ORDER BY count(r) DESC ")
     List<Object[]> findAlbumWithTrackHavingMostRatings(Pageable pageable);
 
     @Query("SELECT t.name, COUNT(r) as count, AVG(r.mark) as average_mark " +

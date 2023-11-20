@@ -1,49 +1,4 @@
 <configuration>
-<!--    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>-->
-<!--    <property name="LOGS" value="./logs"/>-->
-
-<!--    <appender name="Console"-->
-<!--              class="ch.qos.logback.core.ConsoleAppender">-->
-<!--        <layout class="ch.qos.logback.classic.PatternLayout">-->
-<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>-->
-<!--        </layout>-->
-<!--    </appender>-->
-<!--    <appender name="ColoredConsole"-->
-<!--              class="ch.qos.logback.core.ConsoleAppender">-->
-<!--        <encoder>-->
-<!--            <pattern>-->
-<!--                %highlight(%-5level) %d{HH:mm:ss.SSS} [%thread] %cyan(%logger{15}) - %msg%n-->
-<!--            </pattern>-->
-<!--        </encoder>-->
-<!--    </appender>-->
-
-
-<!--    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-
-<!--        <encoder>-->
-<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>-->
-<!--        </encoder>-->
-
-<!--        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
-<!--            <fileNamePattern>${LOGS}/archived/spring-boot-logger-%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
-<!--            <maxHistory>30</maxHistory>-->
-<!--            <totalSizeCap>10GB</totalSizeCap>-->
-<!--            <maxFileSize>100MB</maxFileSize>-->
-<!--        </rollingPolicy>-->
-
-<!--    </appender>-->
-
-<!--    <root level="info">-->
-<!--        <appender-ref ref="Console" />-->
-<!--        <appender-ref ref="RollingFile" />-->
-<!--    </root>-->
-
-<!--    <logger name="com.example.myapp"-->
-<!--            level="trace"-->
-<!--            additivity="false">-->
-<!--        <appender-ref ref="RollingFile" />-->
-<!--    </logger>-->
-
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
@@ -61,7 +16,6 @@
 
     <appender name="RollingFile"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- Configurations for the rolling file appender -->
     </appender>
 
     <root level="info">

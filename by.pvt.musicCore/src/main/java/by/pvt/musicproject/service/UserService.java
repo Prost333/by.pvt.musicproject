@@ -1,5 +1,6 @@
 package by.pvt.musicproject.service;
 
+import by.pvt.musicproject.dto.SubscriptionRes;
 import by.pvt.musicproject.dto.TrackRes;
 import by.pvt.musicproject.dto.UserRequest;
 import by.pvt.musicproject.dto.UserResponse;
@@ -20,9 +21,7 @@ public interface UserService {
 
     List<User> getAllUser();
 
-    void addTrackToUser(Long userId, Track track);
-
-    UserResponse createSubscriptionByUser(Long userId, int day);
+    SubscriptionRes createSubscriptionByUser(Long userId, int day);
     List<TrackRes> getAllTrackByUser(Long id);
     void deleteTracks(Long userId, Long trackId);
     List<UserResponse> getAllUserRes();

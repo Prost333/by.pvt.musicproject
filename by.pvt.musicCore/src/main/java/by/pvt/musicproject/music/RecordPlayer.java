@@ -6,12 +6,8 @@ import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import org.springframework.stereotype.Service;
 
-
-import javax.sound.sampled.*;
 import java.io.*;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 @Service
 public class RecordPlayer {
     private Player player;
@@ -75,6 +71,9 @@ public class RecordPlayer {
                     fileInputStream = new FileInputStream("C:\\musikdb\\wav\\" + filePath);
                     bis = new BufferedInputStream(fileInputStream);
                     songTotalLength = bis.available();
+                    if (pauseLocation > 0) {
+                        fileInputStream.skip(songTotalLength - pauseLocation);
+                    }
                     player = new Player(bis);
                     player.play();
                 } catch (JavaLayerException | IOException e) {
@@ -83,42 +82,4 @@ public class RecordPlayer {
             }
         }).start();
     }
-
-    public void singlePlay(String filePath) {
-        if (player == null) {
-            try {
-                fileInputStream = new FileInputStream("C:\\musikdb\\wav\\" + filePath);
-                bis = new BufferedInputStream(fileInputStream);
-                player = new Player(bis);
-
-                bis.skip(songTotalLength - pauseLocation);
-            } catch (JavaLayerException | IOException e) {
-                e.printStackTrace();
-            }
-
-            new Thread(() -> {
-                try {
-                    player.play();
-                } catch (JavaLayerException e) {
-                    e.printStackTrace();
-                }
-            }).start();
-        }
-    }
-
-//    public void resume() {
-//        if (player != null) {
-//            try {
-//                fileInputStream = new FileInputStream("C:\\musikdb\\wav\\" + filePath);
-//                bis = new BufferedInputStream(fileInputStream);
-//                bis.skip(songTotalLength - pauseLocation);
-//                player = new Player(bis);
-//                player.play();
-//            } catch (FileNotFoundException | JavaLayerException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 }

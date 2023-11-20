@@ -1,13 +1,19 @@
 package by.pvt.musicproject.service.imp;
 
+import by.pvt.musicproject.aop.verification.CheckSubscription;
+import by.pvt.musicproject.dto.AlbumsRes;
 import by.pvt.musicproject.dto.TrackReq;
 import by.pvt.musicproject.dto.TrackRes;
+import by.pvt.musicproject.dto.UserResponse;
 import by.pvt.musicproject.entity.Album;
 import by.pvt.musicproject.entity.Performer;
 import by.pvt.musicproject.entity.Track;
+import by.pvt.musicproject.entity.User;
 import by.pvt.musicproject.mapper.TrackMapper;
+import by.pvt.musicproject.mapper.UserMapper;
 import by.pvt.musicproject.music.RecordPlayer;
 import by.pvt.musicproject.repository.DaoTrackList;
+import by.pvt.musicproject.repository.DaoUser;
 import by.pvt.musicproject.service.AlbumService;
 import by.pvt.musicproject.service.TrackListService;
 import by.pvt.musicproject.service.UserService;
@@ -20,7 +26,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,13 +38,30 @@ public class TrackListServiceImp implements TrackListService {
 
     private final DaoTrackList dao;
     private final UserService userService;
+    private final UserMapper userMapper;
     private final TrackMapper trackMapper;
     private final RecordPlayer recordPlayer;
+    private final DaoUser daoUser;
 
     @SneakyThrows
     public TrackRes add(Track track) {
         Track track1 = dao.save(track);
         return trackMapper.toResponse(track1);
+    }
+
+    @CheckSubscription
+    public Map<UserResponse, List<TrackRes>> addTrackToUser(Long userId, Long trackId) {
+        Map<UserResponse, List<TrackRes>> map = new HashMap<>();
+        Track track = findTrackById(trackId);
+        User user = userService.findEntitybyId(userId);
+        if (user != null && !user.getTrack().contains(track)) {
+            user.getTrack().add(track);
+            daoUser.save(user);
+        }
+        List<TrackRes> trackRes = user.getTrack().stream().map(trackMapper::toResponse).collect(Collectors.toList());
+        UserResponse userResponse =userMapper.toResponse(user);
+        map.put(userResponse,trackRes);
+        return map;
     }
 
     @Override

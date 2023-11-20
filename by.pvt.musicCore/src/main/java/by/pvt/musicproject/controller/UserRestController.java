@@ -1,6 +1,7 @@
 package by.pvt.musicproject.controller;
 
 import by.pvt.musicproject.aop.verification.ControlSessionUserBySubscription;
+import by.pvt.musicproject.dto.SubscriptionRes;
 import by.pvt.musicproject.dto.TrackRes;
 import by.pvt.musicproject.dto.UserRequest;
 import by.pvt.musicproject.dto.UserResponse;
@@ -61,23 +62,17 @@ public class UserRestController {
     }
 
     @GetMapping("/create")
-    public UserResponse createSubscriptionByUser(@RequestParam("userId") Long userId, @RequestParam("day") int day) {
-        return userService.createSubscriptionByUser(userId, day);
+    public SubscriptionRes createSubscriptionByUser(@RequestParam("day") int day) {
+        authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return userService.createSubscriptionByUser(user.getId(), day);
     }
 
-
-    @GetMapping("/addTrack")
-    @ControlSessionUserBySubscription
-    public String addTrackToUserPlaylist(@RequestParam("trackId") Long trackId) {
-        Track track = trackListService.findTrackById(trackId);
-        User user=(User) authentication.getPrincipal();
-        userService.addTrackToUser(user.getId(), track);
-        return "added " + track.getName() + " to library";
-    }
 
     @PostMapping("/deleteTrack")
-    public void deleteTrackByUser(@RequestParam("userId") Long userId, @RequestParam("trackId") Long trackId) {
-        userService.deleteTracks(userId, trackId);
+    public void deleteTrackByUser(@RequestParam("trackId") Long trackId) {
+        User user=(User) authentication.getPrincipal();
+        userService.deleteTracks(user.getId(), trackId);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)

@@ -1,13 +1,12 @@
 package by.pvt.musicproject.service.imp;
 
 import by.pvt.musicproject.aop.verification.CheckSubscription;
-import by.pvt.musicproject.dto.TrackRes;
-import by.pvt.musicproject.dto.UserRequest;
-import by.pvt.musicproject.dto.UserResponse;
+import by.pvt.musicproject.dto.*;
 import by.pvt.musicproject.entity.Subscription;
 import by.pvt.musicproject.entity.Track;
 import by.pvt.musicproject.entity.User;
 import by.pvt.musicproject.exception.EntityNotFoundException;
+import by.pvt.musicproject.mapper.SubscriptionMapper;
 import by.pvt.musicproject.mapper.TrackMapper;
 import by.pvt.musicproject.mapper.UserMapper;
 import by.pvt.musicproject.repository.DaoUser;
@@ -28,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -45,7 +45,7 @@ public class UserServiceImp implements UserService {
 
     private final UserMapper userMapper;
     private final TrackMapper trackMapper;
-
+    private final SubscriptionMapper subscriptionMapper;
     private final HttpServletRequest httpServletRequest;
     public final AmountService amountService;
 
@@ -109,16 +109,9 @@ public class UserServiceImp implements UserService {
         return dao.findAll();
     }
 
-    @CheckSubscription
-    public void addTrackToUser(Long userId, Track track) {
-        User user = dao.findById(userId).orElse(null);
-        if (user != null && !user.getTrack().contains(track)) {
-            user.getTrack().add(track);
-            dao.save(user);
-        }
-    }
 
-    public UserResponse createSubscriptionByUser(Long userId, int day) {
+
+    public SubscriptionRes createSubscriptionByUser(Long userId, int day) {
         User user = findEntitybyId(userId);
         Subscription subscription = subscriptionService.findSubscriptionById(user.getSubscription().getId());
         subscription.setUserId(user.getId());
@@ -128,7 +121,8 @@ public class UserServiceImp implements UserService {
         subscription.setStartData(now());
         subscription.setEndData(now().plus(day, ChronoUnit.DAYS));
         user.setSubscription(subscription);
-        return userMapper.toResponse(dao.save(user));
+        dao.save(user);
+        return subscriptionMapper.toResponse(subscription);
     }
 
     @CheckSubscription

@@ -5,11 +5,14 @@ import by.pvt.musicproject.dto.RatingRes;
 import by.pvt.musicproject.dto.TrackReq;
 import by.pvt.musicproject.dto.TrackRes;
 import by.pvt.musicproject.entity.Rating;
+import by.pvt.musicproject.entity.User;
 import by.pvt.musicproject.mapper.RatingMapper;
 import by.pvt.musicproject.service.RatingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +23,13 @@ import java.util.List;
 public class RatingController {
 
     private final RatingService ratingService;
+    private Authentication authentication;
 
     @PostMapping("/add")
     public RatingRes add(@RequestBody RatingReq ratingReq) {
-        return ratingService.create(ratingReq.getMark(), ratingReq.getTrackId(), ratingReq.getUserid());
+        authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return ratingService.create(ratingReq.getMark(), ratingReq.getTrackId(), user.getId());
     }
 
     @GetMapping("/getAll")
